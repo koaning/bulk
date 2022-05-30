@@ -9,9 +9,9 @@ from bokeh.models import (Button, ColumnDataSource, DataTable, TableColumn, Text
 from bokeh.plotting import figure
 from bokeh.models import DataTable, TableColumn
 
-def bkapp(path):
+def bulk_text(path):
 
-    def bulk_text(doc):
+    def bkapp(doc):
         df = pd.read_csv(path)
         saved_idx = []
         highlighed_idx = []
@@ -52,15 +52,4 @@ def bkapp(path):
             row(controls, data_table)
         )
 
-    return bulk_text
-
-from bokeh.server.server import Server
-
-
-server = Server({"/": bkapp('cluestarred.csv')}, io_loop=IOLoop())
-server.start()
-
-if __name__ == '__main__':
-    from bokeh.util.browser import view
-    server.io_loop.add_callback(view, "http://localhost:5006/")
-    server.io_loop.start()
+    return bkapp
