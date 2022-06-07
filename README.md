@@ -47,6 +47,8 @@ You can now use this `ready.csv` file to apply some bulk labelling.
 python -m bulk text ready.csv
 ```
 
+The `text` interface of bulk expects a `"text"` column, an `"x"` column and a `"y"` column. 
+
 ## Usecase 
 
 The interface may help you label very quickly, but the labels themselves may be faily noisy. The intended use-case for this tool is to prepare interesting subsets to be used later in [prodi.gy](https://prodi.gy). 
