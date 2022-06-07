@@ -17,6 +17,13 @@ python -m pip install bulk
 
 To use bulk, you'll first need to prepare a csv file for the lasso widget.
 
+> **Note**
+> The example below uses the [universal sentence encoder](https://tfhub.dev/google/universal-sentence-encoder/4) but you're
+> totally free to use what-ever text embedding tool that you like.
+> You may also enjoy [whatlies](https://koaning.github.io/whatlies/tutorial/scikit-learn/) or [sentence transformers](https://www.sbert.net/examples/applications/computing-embeddings/README.html). You will
+> need to install these tools seperately.
+
+
 ```python
 import pandas as pd
 from umap import UMAP
@@ -38,7 +45,7 @@ X_tfm = umap.fit_transform(X)
 # Apply coordinates
 df['x'] = X_tfm[:, 0]
 df['y'] = X_tfm[:, 1]
-df.write_csv("ready.csv")
+df.to_csv("ready.csv")
 ```
 
 You can now use this `ready.csv` file to apply some bulk labelling. 
@@ -46,8 +53,6 @@ You can now use this `ready.csv` file to apply some bulk labelling.
 ```
 python -m bulk text ready.csv
 ```
-
-The `text` interface of bulk expects a `"text"` column, an `"x"` column and a `"y"` column. 
 
 ## Usecase 
 
