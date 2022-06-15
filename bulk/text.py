@@ -27,6 +27,7 @@ def bulk_text(path):
             source.data = subset
 
         def save():
+            global highlighed_idx
             df.iloc[highlighed_idx][['text']].to_csv(text_filename.value)
 
         columns = [
