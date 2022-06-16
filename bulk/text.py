@@ -28,7 +28,7 @@ def bulk_text(path):
         def save():
             """Callback used to save highlighted data points"""
             global highlighed_idx
-            df.iloc[highlighted_idx][datatable_columns].to_csv(text_filename.value)
+            df.iloc[highlighted_idx].to_csv(text_filename.value)
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
