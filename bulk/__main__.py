@@ -17,7 +17,7 @@ app = typer.Typer(
 
 @app.command("version")
 def version():
-    print("0.1.1")
+    print("0.1.0")
 
 
 @app.command("text")
