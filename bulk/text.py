@@ -12,6 +12,7 @@ def bulk_text(path):
         df = pd.read_csv(path)
         highlighted_idx = []
 
+        mapper, df = get_color_mapping(df)
         datatable_columns = get_datatable_columns(df)
         columns = [
             TableColumn(field=col, title=col) for col in datatable_columns
@@ -40,7 +41,6 @@ def bulk_text(path):
 
         circle_kwargs = {"x": "x", "y": "y", "size": 1, "source": source_orig}
         if "color" in df.columns:
-            mapper = get_color_mapping(df)
             circle_kwargs.update({"color": mapper})
 
             color_bar = ColorBar(color_mapper=mapper['transform'], width=8)
