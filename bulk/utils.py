@@ -1,4 +1,4 @@
-from typing import List, Tuple, Optional
+from typing import Tuple, Optional
 
 import bokeh.transform
 import numpy as np
@@ -40,14 +40,3 @@ def get_color_mapping(df: pd.DataFrame) -> Tuple[Optional[bokeh.transform.transf
             f"Got {color_datatype}."
         )
     return mapper, df
-
-
-def get_datatable_columns(df: pd.DataFrame) -> List[str]:
-    """"""
-    columns = df.columns
-    filtered_columns = []
-    for c in columns:
-        if c in ["x", "y"] or c.startswith("Unnamed"):
-            continue
-        filtered_columns.append(c)
-    return filtered_columns

@@ -4,7 +4,7 @@ from bokeh.layouts import column, row
 from bokeh.models import Button, ColumnDataSource, TextInput, DataTable, TableColumn, ColorBar
 from bokeh.plotting import figure
 
-from .utils import get_color_mapping, get_datatable_columns
+from .utils import get_color_mapping
 
 
 def bulk_text(path):
@@ -13,9 +13,8 @@ def bulk_text(path):
         highlighted_idx = []
 
         mapper, df = get_color_mapping(df)
-        datatable_columns = get_datatable_columns(df)
         columns = [
-            TableColumn(field=col, title=col) for col in datatable_columns
+            TableColumn(field="text", title="text")
         ]
 
         def update(attr, old, new):
