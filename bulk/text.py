@@ -47,8 +47,8 @@ def bulk_text(path):
             p.add_layout(color_bar, 'right')
 
         scatter = p.circle(**circle_kwargs)
-        p.plot_width = 600
-        p.plot_height = 600
+        p.plot_width = 300
+        p.plot_height = 300
 
         scatter.data_source.selected.on_change('indices', update)
 
