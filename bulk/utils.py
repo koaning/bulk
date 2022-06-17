@@ -37,4 +37,9 @@ def get_color_mapping(df: pd.DataFrame) -> bokeh.transform.transform:
 def get_datatable_columns(df: pd.DataFrame) -> List[str]:
     """"""
     columns = df.columns
-    return [c for c in columns if c not in ["x", "y", "color"]]
+    filtered_columns = []
+    for c in columns:
+        if c in ["x", "y"] or c.startswith("Unnamed"):
+            continue
+        filtered_columns.append(c)
+    return filtered_columns
