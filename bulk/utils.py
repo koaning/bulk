@@ -2,7 +2,7 @@ from typing import List
 
 import bokeh.transform
 import pandas as pd
-from bokeh.palettes import Magma256, viridis
+from bokeh.palettes import Cividis256, cividis
 from bokeh.transform import linear_cmap, factor_cmap
 
 
@@ -11,7 +11,7 @@ def get_color_mapping(df: pd.DataFrame) -> bokeh.transform.transform:
     color_datatype = str(df["color"].dtype)
     if color_datatype == "object":  # string
         all_values = list(df["color"].unique())
-        palette = viridis(len(all_values))
+        palette = cividis(len(all_values))
         mapper = factor_cmap(
             field_name="color",
             palette=palette,
@@ -21,7 +21,7 @@ def get_color_mapping(df: pd.DataFrame) -> bokeh.transform.transform:
         all_values = df["color"].dropna().values
         mapper = linear_cmap(
             field_name="color",
-            palette=Magma256,
+            palette=Cividis256,
             low=all_values.min(),
             high=all_values.max(),
             nan_color="grey"
