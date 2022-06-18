@@ -36,7 +36,9 @@ def bulk_text(path):
         data_table = DataTable(source=source, columns=columns, width=800)
         source.data = df
 
-        p = figure(title="", sizing_mode="scale_both", tools="lasso_select")
+        p = figure(title="", sizing_mode="scale_both", tools=["lasso_select", "box_select", "pan", "box_zoom", "wheel_zoom", "reset"])
+        p.toolbar.active_drag = None
+        p.toolbar.active_inspect = None
 
         circle_kwargs = {"x": "x", "y": "y", "size": 1, "source": source_orig}
         if "color" in df.columns:
