@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright/python:v1.22.0-focal
 
     steps:
