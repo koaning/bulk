@@ -26,4 +26,4 @@ jobs:
         playwright install chrome --with-deps
     - name: Test with pytest
       run: |
-        python -m bulk text cluestarred.csv & pytest
+        python -m bulk text cluestarred.csv & sleep 10 && curl http://localhost:5006 && pytest
