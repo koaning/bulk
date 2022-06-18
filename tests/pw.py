@@ -12,4 +12,4 @@ with sync_playwright() as p:
     page.mouse.move(100, 100)
     page.mouse.up()
     page.locator("text=SAVE").click()
-    assert pd.read_csv("out.csv").shape[0] > 0
+    assert pd.read_csv("out2.csv").shape[0] > 0
