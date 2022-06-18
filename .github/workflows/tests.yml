@@ -10,10 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.7, 3.8, 3.9, '3.10']
+    container: mcr.microsoft.com/playwright/python:v1.22.0-focal
 
     steps:
     - uses: actions/checkout@v2
