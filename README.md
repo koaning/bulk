@@ -54,6 +54,10 @@ You can now use this `ready.csv` file to apply some bulk labelling.
 python -m bulk text ready.csv
 ```
 
+### Extras 
+
+You can also pass an extra column to your csv file called "color". This column will then be used to color the points in the interface. 
+
 ## Usecase 
 
 The interface may help you label very quickly, but the labels themselves may be faily noisy. The intended use-case for this tool is to prepare interesting subsets to be used later in [prodi.gy](https://prodi.gy). 
