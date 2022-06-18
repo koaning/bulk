@@ -1,5 +1,6 @@
 import pandas as pd 
 
+
 def test_example_is_working(page):
     page.goto("http://localhost:5006")
     page.locator(".bk.bk-toolbar-button.bk-tool-icon-box-select").click()
@@ -9,5 +10,4 @@ def test_example_is_working(page):
     page.mouse.up()
     page.locator("text=SAVE").click()
     print(pd.read_csv("out.csv"))
-    assert pd.read_csv("out.csv").shape[0] > 0
-
+    assert pd.read_csv("out2.csv").shape[0] > 0
