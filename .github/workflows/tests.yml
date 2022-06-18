@@ -24,9 +24,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e ".[dev]"
         playwright install chrome --with-deps
-    - name: Curl the site
+    - name: Start server in background
       run: |
-        python -m bulk text cluestarred.csv & sleep 1 && curl http://localhost:5006
+        python -m bulk text cluestarred.csv & sleep 1
+    - name: Curl the server
+      run: |
+        curl http://localhost:5006
     - name: Test with Pytest
       run: |
-        python -m bulk text cluestarred.csv & sleep 1 && pytest
+        pytest
