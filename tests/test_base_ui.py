@@ -9,5 +9,4 @@ def test_example_is_working(page):
     page.mouse.move(100, 100)
     page.mouse.up()
     page.locator("text=SAVE").click()
-    print(pd.read_csv("out.csv"))
-    assert pd.read_csv("out2.csv").shape[0] > 0
+    assert pd.read_csv("out.csv").shape[0] > 0
