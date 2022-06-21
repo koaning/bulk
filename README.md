@@ -18,25 +18,24 @@ python -m pip install bulk
 To use bulk, you'll first need to prepare a csv file for the lasso widget.
 
 > **Note**
-> The example below uses the [universal sentence encoder](https://tfhub.dev/google/universal-sentence-encoder/4) but you're
-> totally free to use what-ever text embedding tool that you like.
-> You may also enjoy [whatlies](https://koaning.github.io/whatlies/tutorial/scikit-learn/) or [sentence transformers](https://www.sbert.net/examples/applications/computing-embeddings/README.html). You will
-> need to install these tools seperately.
-
+>
+> The example below uses [sentence-transformers](https://www.sbert.net/) to generate the embeddings and [umap](https://umap-learn.readthedocs.io/) to reduce the dimensions. But you're  totally free to use what-ever text embedding tool that you like. You will need to install these tools seperately.
 
 ```python
 import pandas as pd
 from umap import UMAP
-import tensorflow_hub as hub
+
+# pip install -U sentence-transformers
+from sentence_transformers import SentenceTransformer
 
 # Load the universal sentence encoder
-embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
+model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 # Load original dataset
 df = pd.read_csv("original.csv")
 
-# Apply embeddings 
-X = embed(df['text'])
+# Calculate embeddings 
+X =  model.encode(sentences)
 
 # Reduce the dimensions with UMAP
 umap = UMAP()
@@ -56,6 +55,11 @@ python -m bulk text ready.csv
 
 If you're looking for an example file to play around with you can download
 [the demo .csv file](https://github.com/koaning/bulk/blob/main/cluestarred.csv) in this repository.
+
+### Extras 
+
+You can also pass an extra column to your csv file called "color". This column will then be used to color the points in the interface. 
+
 ## Usecase 
 
 The interface may help you label very quickly, but the labels themselves may be faily noisy. The intended use-case for this tool is to prepare interesting subsets to be used later in [prodi.gy](https://prodi.gy). 

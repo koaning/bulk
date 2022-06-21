@@ -13,3 +13,9 @@ pypi: clean
 install:
 	python -m pip install --upgrade pip
 	python -m pip install -e .
+
+serve:
+	python -m bulk text cluestarred.csv
+
+test:
+	pytest

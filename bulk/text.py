@@ -27,8 +27,8 @@ def bulk_text(path):
 
         def save():
             """Callback used to save highlighted data points"""
-            global highlighed_idx
-            df.iloc[highlighted_idx].to_csv(text_filename.value)
+            global highlighted_idx
+            df.iloc[highlighted_idx][['text']].to_csv(text_filename.value, index=False)
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
@@ -36,7 +36,9 @@ def bulk_text(path):
         data_table = DataTable(source=source, columns=columns, width=800)
         source.data = df
 
-        p = figure(title="", sizing_mode="scale_both", tools="lasso_select")
+        p = figure(title="", sizing_mode="scale_both", tools=["lasso_select", "box_select", "pan", "box_zoom", "wheel_zoom", "reset"])
+        p.toolbar.active_drag = None
+        p.toolbar.active_inspect = None
 
         circle_kwargs = {"x": "x", "y": "y", "size": 1, "source": source_orig}
         if "color" in df.columns:
