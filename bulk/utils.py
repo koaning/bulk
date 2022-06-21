@@ -3,7 +3,7 @@ from typing import Tuple, Optional
 import bokeh.transform
 import numpy as np
 import pandas as pd
-from bokeh.palettes import Cividis256, cividis
+from bokeh.palettes import Category10, Cividis256
 from bokeh.transform import linear_cmap, factor_cmap
 
 
@@ -18,10 +18,11 @@ def get_color_mapping(df: pd.DataFrame) -> Tuple[Optional[bokeh.transform.transf
             lambda x: str(x) if not (type(x) == float and np.isnan(x)) else x
         )
         all_values = list(df["color"].dropna().unique())
-        palette = cividis(len(all_values))
+        if len(all_values) == 2:
+            all_values.extend([""])
         mapper = factor_cmap(
             field_name="color",
-            palette=palette,
+            palette=Category10[len(all_values)],
             factors=all_values,
             nan_color="grey"
         )
