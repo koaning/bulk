@@ -3,13 +3,25 @@ import pandas as pd
 from bokeh.layouts import column, row
 from bokeh.models import Button, ColumnDataSource, TextInput, DataTable, TableColumn, ColorBar
 from bokeh.plotting import figure
+from bokeh.palettes import Spectral6
 
 from .utils import get_color_mapping
 
 
-def bulk_text(path):
+def determine_keyword(text, keywords):
+    for kw in keywords:
+        if kw in text:
+            return kw
+    return "none"
+
+def bulk_text(path, keywords=None):
     def bkapp(doc):
         df = pd.read_csv(path)
+        df['alpha'] = 0.5
+        if keywords:
+            df['color'] = [determine_keyword(str(t), keywords) for t in df['text']]
+            df['alpha'] = [0.4 if c == 'none' else 1 for c in df['color']]
+        
         highlighted_idx = []
 
         mapper, df = get_color_mapping(df)
@@ -33,22 +45,23 @@ def bulk_text(path):
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
 
-        data_table = DataTable(source=source, columns=columns, width=800)
+        data_table = DataTable(source=source, columns=columns, width=750 if "color" in df.columns else 800)
         source.data = df
 
         p = figure(title="", sizing_mode="scale_both", tools=["lasso_select", "box_select", "pan", "box_zoom", "wheel_zoom", "reset"])
         p.toolbar.active_drag = None
         p.toolbar.active_inspect = None
 
-        circle_kwargs = {"x": "x", "y": "y", "size": 1, "source": source_orig}
+        circle_kwargs = {"x": "x", "y": "y", "size": 1, "source": source_orig, "alpha": "alpha"}
         if "color" in df.columns:
             circle_kwargs.update({"color": mapper})
-
             color_bar = ColorBar(color_mapper=mapper['transform'], width=8)
             p.add_layout(color_bar, 'right')
 
         scatter = p.circle(**circle_kwargs)
         p.plot_width = 300
+        if "color" in df.columns:
+            p.plot_width=350
         p.plot_height = 300
 
         scatter.data_source.selected.on_change('indices', update)

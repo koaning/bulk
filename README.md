@@ -53,10 +53,17 @@ You can now use this `ready.csv` file to apply some bulk labelling.
 python -m bulk text ready.csv
 ```
 
+If you're looking for an example file to play around with you can download
+[the demo .csv file](https://github.com/koaning/bulk/blob/main/cluestarred.csv) in this repository.
 ### Extras 
 
 You can also pass an extra column to your csv file called "color". This column will then be used to color the points in the interface. 
 
+You can also pass `--keywords` to the command line app to highlight elements that contain specific keywords.
+
+```
+python -m bulk text ready.csv --keywords deliver,card,website,compliment
+```
 ## Usecase 
 
 The interface may help you label very quickly, but the labels themselves may be faily noisy. The intended use-case for this tool is to prepare interesting subsets to be used later in [prodi.gy](https://prodi.gy). 

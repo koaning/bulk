@@ -21,12 +21,16 @@ def version():
 
 
 @app.command("text")
-def text(path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exists=True)):
+def text(path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exists=True),
+         keywords: str = typer.Option(None, help="Keywords to highlight")):
     """Bulk Labelling for Text"""
-    server = Server({"/": bulk_text(path)}, io_loop=IOLoop())
+    if keywords:
+        keywords = keywords.split(",")
+    server = Server({"/": bulk_text(path, keywords=keywords)}, io_loop=IOLoop())
     server.start()
-
-    server.io_loop.add_callback(view, "http://localhost:5006/")
+    host = "http://localhost:5006/"
+    print(f"About to serve `bulk` over at {host}.")
+    server.io_loop.add_callback(view, host)
     server.io_loop.start()
 
 
