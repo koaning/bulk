@@ -62,7 +62,7 @@ You can also pass an extra column to your csv file called "color". This column w
 You can also pass `--keywords` to the command line app to highlight elements that contain specific keywords.
 
 ```
-python -m bulk text ready.csv --keywords deliver,card,website,compliment
+python -m bulk text ready.csv --keywords "deliver,card,website,compliment"
 ```
 ## Usecase 
 
