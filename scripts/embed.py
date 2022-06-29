@@ -8,7 +8,7 @@ from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 # Load original dataset
-df = pd.read_csv("cluestarred.csv")[['text']]
+df = pd.read_csv("dataset.csv")[['text']]
 sentences = df['text']
 
 # Calculate embeddings 
