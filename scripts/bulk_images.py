@@ -16,7 +16,7 @@ from bokeh.models import (Button, ColumnDataSource, DataTable, TableColumn, Text
 from bokeh.plotting import figure
 from bokeh.models import DataTable, TableColumn
 
-def bulk_text(path):
+def bulk_images(path):
     df = pd.read_csv(path)
     saved_idx = []
     highlighed_idx = []
@@ -58,4 +58,4 @@ def bulk_text(path):
         row(controls, data_table)
     )
 
-bulk_text("cluestarred.csv")
+bulk_images("cluestarred.csv")
