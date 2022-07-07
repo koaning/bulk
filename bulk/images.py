@@ -48,7 +48,7 @@ def bulk_images(path, keywords=None):
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
 
-        data_table = DataTable(source=source, columns=columns, width=750 if "color" in df.columns else 800)
+        data_table = DataTable(source=source, columns=columns, row_height=100, width=750 if "color" in df.columns else 800)
         source.data = df
 
         p = figure(title="", sizing_mode="scale_both", tools=["lasso_select", "box_select", "pan", "box_zoom", "wheel_zoom", "reset"])
