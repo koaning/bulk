@@ -1,4 +1,19 @@
 <img src="lasso.svg" align="right" >
+# bulk-images
+This repository adds image support for the bulk library.
+
+## Usage
+In the command line, run:
+```
+python -m bulk images bhl_umap_subsample.csv
+```
+
+## To-Do
+- [x] add basic support for images
+- [ ] have images populate in a grid
+- [ ] allow users to control size of plot with sliders
+- [ ] allow users to control size of circles with sliders
+- [ ] allow users to control size of DataTable (or grid) with sliders
 
 # bulk
 
@@ -10,7 +25,7 @@ Bulk is a quick developer tool to apply some bulk labels. Given a prepared datas
 
 If you're curious to learn more, you may appreciated [this demo video on YouTube](https://www.youtube.com/watch?v=gDk7_f3ovIk&ab_channel=Explosion).
 
-# Install 
+# Install
 
 ```
 python -m pip install --upgrade pip
@@ -38,7 +53,7 @@ model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 # Load original dataset
 df = pd.read_csv("original.csv")
 
-# Calculate embeddings 
+# Calculate embeddings
 X =  model.encode(sentences)
 
 # Reduce the dimensions with UMAP
@@ -51,19 +66,19 @@ df['y'] = X_tfm[:, 1]
 df.to_csv("ready.csv")
 ```
 
-You can now use this `ready.csv` file to apply some bulk labelling. 
+You can now use this `ready.csv` file to apply some bulk labelling.
 
 ```
 python -m bulk text ready.csv
 ```
 
 If you're looking for an example file to play around with you can download
-[the demo .csv file](https://github.com/koaning/bulk/blob/main/cluestarred.csv) in this repository. This dataset 
+[the demo .csv file](https://github.com/koaning/bulk/blob/main/cluestarred.csv) in this repository. This dataset
 contains a subset of a dataset found on Kaggle. You can find the original [here](https://www.kaggle.com/datasets/thoughtvector/customer-support-on-twitter).
 
-### Extras 
+### Extras
 
-You can also pass an extra column to your csv file called "color". This column will then be used to color the points in the interface. 
+You can also pass an extra column to your csv file called "color". This column will then be used to color the points in the interface.
 
 You can also pass `--keywords` to the command line app to highlight elements that contain specific keywords.
 
@@ -71,6 +86,6 @@ You can also pass `--keywords` to the command line app to highlight elements tha
 python -m bulk text ready.csv --keywords "deliver,card,website,compliment"
 ```
 
-## Usecase 
+## Usecase
 
-The interface may help you label very quickly, but the labels themselves may be faily noisy. The intended use-case for this tool is to prepare interesting subsets to be used later in [prodi.gy](https://prodi.gy). 
+The interface may help you label very quickly, but the labels themselves may be faily noisy. The intended use-case for this tool is to prepare interesting subsets to be used later in [prodi.gy](https://prodi.gy).
