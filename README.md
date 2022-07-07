@@ -16,8 +16,8 @@ python -m bulk images bhl_umap_subsample.csv
 - [x] add basic support for images
 - [ ] have images populate in a grid
 - [ ] allow users to control size of plot with sliders
-- [ ] allow users to control size of circles with sliders
-- [ ] allow users to control size of DataTable (or grid) with sliders
+- [x] allow users to control size of circles with sliders
+- [x] allow users to control size of DataTable (or grid) with sliders
 
 # bulk (initial README)
 
