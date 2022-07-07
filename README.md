@@ -1,4 +1,5 @@
 <img src="lasso.svg" align="right" >
+
 # bulk-images
 This repository adds image support for the bulk library.
 
@@ -15,7 +16,7 @@ python -m bulk images bhl_umap_subsample.csv
 - [ ] allow users to control size of circles with sliders
 - [ ] allow users to control size of DataTable (or grid) with sliders
 
-# bulk
+# bulk (initial README)
 
 Bulk is a quick developer tool to apply some bulk labels. Given a prepared dataset with 2d embeddings it can generate an interface that allows you to quickly add some bulk, albeit less precice, annotations.
 
