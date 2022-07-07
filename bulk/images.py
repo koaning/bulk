@@ -29,7 +29,10 @@ def bulk_images(path, keywords=None):
 
         mapper, df = get_color_mapping(df)
         columns = [
-            TableColumn(field="image", title="images", formatter=HTMLTemplateFormatter(template='<img src="<%= image %>" width=60>'))
+            TableColumn(field="title", title="title"),
+            TableColumn(field="image", title="image", formatter=HTMLTemplateFormatter(template='<img src="<%= image %>" width=60>')),
+            TableColumn(field="image", title="download", formatter=HTMLTemplateFormatter(template=r'<a href="<%= image %>", targegt="_blank">download</a>')),
+
         ]
 
         def update(attr, old, new):
@@ -43,7 +46,7 @@ def bulk_images(path, keywords=None):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            df.iloc[highlighted_idx][['text']].to_csv(text_filename.value, index=False)
+            df.iloc[highlighted_idx][['title', 'image']].to_csv(text_filename.value, index=False)
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
