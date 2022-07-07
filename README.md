@@ -3,6 +3,9 @@
 # bulk-images
 This repository adds image support for the bulk library.
 
+![](screenshot-images.png)
+
+
 ## Usage
 In the command line, run:
 ```
