@@ -3,7 +3,7 @@
 # bulk-images
 This repository adds image support for the bulk library.
 
-![](screenshot-images.png)
+![](screenshot-images.JPG)
 
 
 ## Usage
