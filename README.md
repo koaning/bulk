@@ -8,7 +8,7 @@ Bulk is a quick developer tool to apply some bulk labels. Given a prepared datas
 
 # Learn
 
-If you're curious to learn more, you may appreciated [this demo video on YouTube](https://www.youtube.com/watch?v=gDk7_f3ovIk&ab_channel=Explosion).
+If you're curious to learn more and see a full demo, please watch [this video on YouTube](https://www.youtube.com/watch?v=gDk7_f3ovIk&ab_channel=Explosion).
 
 # Install 
 
