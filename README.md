@@ -37,6 +37,7 @@ model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
 
 # Load original dataset
 df = pd.read_csv("original.csv")
+sentences = df["text"]
 
 # Calculate embeddings 
 X =  model.encode(sentences)
