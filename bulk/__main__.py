@@ -6,6 +6,7 @@ from bokeh.util.browser import view
 from tornado.ioloop import IOLoop
 
 from bulk.text import bulk_text
+from bulk.util import app as util_app
 
 app = typer.Typer(
     name="bulk",
@@ -13,6 +14,7 @@ app = typer.Typer(
     help="Tools for bulk labelling.",
     no_args_is_help=True,
 )
+app.add_typer(util_app, name="util")
 
 
 @app.command("version")
