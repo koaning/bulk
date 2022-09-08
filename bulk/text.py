@@ -3,9 +3,8 @@ import pandas as pd
 from bokeh.layouts import column, row
 from bokeh.models import Button, ColumnDataSource, TextInput, DataTable, TableColumn, ColorBar
 from bokeh.plotting import figure
-from bokeh.palettes import Spectral6
 
-from .utils import get_color_mapping
+from ._bokeh_utils import get_color_mapping
 
 
 def determine_keyword(text, keywords):

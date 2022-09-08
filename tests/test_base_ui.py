@@ -1,3 +1,4 @@
+import time 
 import pandas as pd 
 
 
@@ -9,4 +10,5 @@ def test_example_is_working(page):
     page.mouse.move(100, 100)
     page.mouse.up()
     page.locator("text=SAVE").click()
+    time.sleep(1)
     assert pd.read_csv("out.csv").shape[0] > 0
