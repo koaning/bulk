@@ -17,8 +17,10 @@ app = typer.Typer(
 app.add_typer(util_app, name="util")
 
 
+
 @app.command("version")
 def version():
+    """Prints the version."""
     print("0.1.0")
 
 
