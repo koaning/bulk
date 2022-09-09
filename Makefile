@@ -12,7 +12,7 @@ pypi: clean
 
 install:
 	python -m pip install --upgrade pip
-	python -m pip install -e .
+	python -m pip install -e ".[dev]"
 
 serve:
 	python -m bulk text cluestarred.csv
