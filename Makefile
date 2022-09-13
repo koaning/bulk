@@ -4,6 +4,7 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf build
 	rm -rf dist
+	rm -rf downloads
 
 pypi: clean
 	python setup.py sdist
@@ -19,3 +20,5 @@ serve:
 
 test:
 	pytest
+
+check: clean test clean
