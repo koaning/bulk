@@ -15,12 +15,22 @@ app = typer.Typer(
 
 
 @app.command("tinyplanet")
-def concat(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
-    """Download the tiny planet dataset."""
+def tinyplanet(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
+    """
+    Download the tiny planet dataset.
+
+    The dataset contains satellite images to track the human footprint in the Amazon rainforest.
+    
+    This dataset was uses the same dataresource as the fast.ai project, found here:
+    https://docs.fast.ai/data.external.html
+
+    It was originally found as part of a Kaggle competition, found here:
+    https://www.kaggle.com/c/planet-understanding-the-amazon-from-space
+    """
     src = pathlib.Path("downloads/tinyplanet/tinyplanet.tgz")
     if not force and src.parent.exists():
         print("The tinyplanet dataset already exists")
-        return 1
+        typer.Exit(1)
     src.parent.mkdir(exist_ok=True, parents=True)
     dst = pathlib.Path("downloads/tinyplanet")
     
