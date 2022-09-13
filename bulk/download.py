@@ -30,7 +30,7 @@ def tinyplanet(force: bool = typer.Option(False, help="Force the download", is_f
     src = pathlib.Path("downloads/tinyplanet/tinyplanet.tgz")
     if not force and src.parent.exists():
         print("The tinyplanet dataset already exists")
-        typer.Exit(1)
+        raise typer.Exit(1)
     src.parent.mkdir(exist_ok=True, parents=True)
     dst = pathlib.Path("downloads/tinyplanet")
     
