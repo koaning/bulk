@@ -4,6 +4,7 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf build
 	rm -rf dist
+	rm -rf downloads
 
 pypi: clean
 	python setup.py sdist
@@ -12,10 +13,12 @@ pypi: clean
 
 install:
 	python -m pip install --upgrade pip
-	python -m pip install -e .
+	python -m pip install -e ".[dev]"
 
 serve:
 	python -m bulk text cluestarred.csv
 
 test:
 	pytest
+
+check: clean test clean

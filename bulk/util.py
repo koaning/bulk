@@ -1,15 +1,17 @@
-from typing import List
 import pathlib 
+from typing import List
 
 import typer
 import pandas as pd
+from bulk.download import app as download_app
 
 app = typer.Typer(
     name="util",
     add_completion=False,
-    help="Utilities for data.",
+    help="Extra utilities.",
     no_args_is_help=True,
 )
+app.add_typer(download_app, name="download")
 
 
 @app.command("concat")
