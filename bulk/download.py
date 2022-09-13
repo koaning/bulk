@@ -24,7 +24,7 @@ def tinyplanet(force: bool = typer.Option(False, help="Force the download", is_f
     This dataset was uses the same dataresource as the fast.ai project, found here:
     https://docs.fast.ai/data.external.html
 
-    It was originally found as part of a Kaggle competition, found here:
+    It is a small subset of a dataset that was originally found as part of a Kaggle competition, found here:
     https://www.kaggle.com/c/planet-understanding-the-amazon-from-space
     """
     src = pathlib.Path("downloads/tinyplanet/tinyplanet.tgz")
