@@ -20,6 +20,9 @@ def get_color_mapping(df: pd.DataFrame) -> Tuple[Optional[bokeh.transform.transf
         all_values = list(df["color"].dropna().unique())
         if len(all_values) == 2:
             all_values.extend([""])
+        elif len(all_values) > len(Category10) + 2:
+            raise ValueError(f"Too many classes defined, the limit for visualisation is {len(Category10) + 2}. "
+                             f"Got {len(all_values)}.")
         mapper = factor_cmap(
             field_name="color",
             palette=Category10[len(all_values)],
