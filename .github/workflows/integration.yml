@@ -1,4 +1,4 @@
-name: Python Package Linux
+name: Integration Test
 
 on:
   push:
@@ -38,4 +38,4 @@ jobs:
         curl http://localhost:7007
     - name: Test with Pytest
       run: |
-        pytest
+        pytest test_web

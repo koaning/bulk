@@ -4,7 +4,7 @@ from typer.testing import CliRunner
 from bulk.__main__ import app
 
 runner = CliRunner()
-
+ 
 
 def test_download_tinyplanet():
     result = runner.invoke(app, ["util", "download", "tinyplanet"])
