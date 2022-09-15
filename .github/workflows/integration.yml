@@ -38,4 +38,4 @@ jobs:
         curl http://localhost:7007
     - name: Test with Pytest
       run: |
-        pytest test_web
+        pytest tests/test_web

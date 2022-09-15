@@ -10,7 +10,6 @@ from bulk.cli.text import bulk_text
 from bulk.cli.vision import bulk_vision
 from bulk.cli.util import app as util_app
 
-import click
 
 class NaturalOrderGroup(TyperGroup):
     def list_commands(self, ctx):
