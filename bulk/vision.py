@@ -63,7 +63,7 @@ def bulk_vision(path):
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
 
-        data_table = DataTable(source=source, columns=columns, row_height=80, width=750 if "color" in df.columns else 800)
+        data_table = DataTable(source=source, columns=columns, row_height=100, width=750 if "color" in df.columns else 800)
         source.data = df
 
         p = figure(title="", sizing_mode="scale_both", 
