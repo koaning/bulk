@@ -35,7 +35,7 @@ jobs:
         curl http://localhost:5006
     - name: Curl the vision server
       run: |
-        curl http://localhost:5006
+        curl http://localhost:7007
     - name: Test with Pytest
       run: |
         pytest
