@@ -1,9 +1,11 @@
 import base64
 import numpy as np
 import pandas as pd
+from itertools import zip_longest
+
+from bokeh.plotting import figure
 from bokeh.layouts import column, row
 from bokeh.models import Button, ColumnDataSource, TextInput, DataTable, TableColumn, ColorBar, HTMLTemplateFormatter
-from bokeh.plotting import figure
 
 from ._bokeh_utils import get_color_mapping
 
@@ -13,17 +15,34 @@ def encode_image(path):
         enc_str = base64.b64encode(image_file.read()).decode('utf-8')
     return f'<img src="data:image/png;base64,{enc_str}">'
 
+
+def grouper(iterable, n, *, incomplete='fill', fillvalue=None):
+    "Collect data into non-overlapping fixed-length chunks or blocks"
+    args = [iter(iterable)] * n
+    if incomplete == 'fill':
+        return zip_longest(*args, fillvalue=fillvalue)
+    if incomplete == 'strict':
+        return zip(*args, strict=True)
+    if incomplete == 'ignore':
+        return zip(*args)
+    else:
+        raise ValueError('Expected fill, strict, or ignore')
+
+
 def bulk_vision(path):
     def bkapp(doc):
         df = pd.read_csv(path).assign(image=lambda d: [encode_image(p) for p in d['path']])
         df['alpha'] = 0.5
-        # df['alpha'] = [0.4 if c == 'none' else 1 for c in df['color']]
         
         highlighted_idx = []
 
         mapper, df = get_color_mapping(df)
         columns = [
-            TableColumn(field="image", title="image", formatter=HTMLTemplateFormatter(template="<%=image%>")),
+            TableColumn(field="image0", title="", formatter=HTMLTemplateFormatter(template="<%=image0%>")),
+            TableColumn(field="image1", title="", formatter=HTMLTemplateFormatter(template="<%=image1%>")),
+            TableColumn(field="image2", title="", formatter=HTMLTemplateFormatter(template="<%=image2%>")),
+            TableColumn(field="image3", title="", formatter=HTMLTemplateFormatter(template="<%=image3%>")),
+            TableColumn(field="image4", title="", formatter=HTMLTemplateFormatter(template="<%=image4%>")),
         ]
 
         def update(attr, old, new):
@@ -32,7 +51,9 @@ def bulk_vision(path):
             subset = df.iloc[new]
             highlighted_idx = new
             subset = subset.iloc[np.random.permutation(len(subset))]
-            source.data = subset
+            groups = grouper(subset['image'], n=5, incomplete="ignore")
+            new_view = pd.DataFrame(groups, columns=[f"image{i}" for i in "01234"])
+            source.data = new_view
 
         def save():
             """Callback used to save highlighted data points"""
@@ -42,12 +63,12 @@ def bulk_vision(path):
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
 
-        data_table = DataTable(source=source, columns=columns, width=750 if "color" in df.columns else 800)
+        data_table = DataTable(source=source, columns=columns, row_height=80, width=750 if "color" in df.columns else 800)
         source.data = df
 
-        p = figure(title="", sizing_mode="scale_both", tools=["lasso_select", "box_select", "pan", "box_zoom", "wheel_zoom", "reset"])
-        p.toolbar.active_drag = None
-        p.toolbar.active_inspect = None
+        p = figure(title="", sizing_mode="scale_both", 
+                   tools="lasso_select,box_select,pan,box_zoom,wheel_zoom,reset",
+                   active_drag = "box_select")
 
         circle_kwargs = {"x": "x", "y": "y", "size": 1, "source": source_orig, "alpha": "alpha"}
         if "color" in df.columns:
