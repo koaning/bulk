@@ -42,7 +42,7 @@ def text(path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exis
 
 @app.command("vision")
 def vision(path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exists=True),
-           port: int = typer.Argument(5006, help="Port number")):
+           port: int = typer.Option(5006, help="Port number")):
     """Bulk Labelling for Images"""
     server = Server({"/": bulk_vision(path)}, io_loop=IOLoop(), port=port)
     server.start()

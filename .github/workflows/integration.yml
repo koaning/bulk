@@ -29,7 +29,7 @@ jobs:
         python -m bulk text tests/data/text.csv --port 5006 & sleep 1
     - name: Start vision server in background
       run: |
-        python -m bulk text tests/data/text.csv --port 7007 & sleep 1
+        python -m bulk text tests/data/vision.csv --port 7007 & sleep 1
     - name: Curl the text server
       run: |
         curl http://localhost:5006
