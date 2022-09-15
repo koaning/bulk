@@ -36,6 +36,6 @@ jobs:
     - name: Curl the vision server
       run: |
         curl http://localhost:7007
-    - name: Test with Pytest
+    - name: Test with Pytest and Playwright
       run: |
         pytest tests/test_web
