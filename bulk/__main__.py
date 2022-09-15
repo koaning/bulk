@@ -6,6 +6,7 @@ from bokeh.util.browser import view
 from tornado.ioloop import IOLoop
 
 from bulk.text import bulk_text
+from bulk.vision import bulk_vision
 from bulk.util import app as util_app
 
 app = typer.Typer(
@@ -31,6 +32,17 @@ def text(path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exis
     if keywords:
         keywords = keywords.split(",")
     server = Server({"/": bulk_text(path, keywords=keywords)}, io_loop=IOLoop())
+    server.start()
+    host = "http://localhost:5006/"
+    print(f"About to serve `bulk` over at {host}.")
+    server.io_loop.add_callback(view, host)
+    server.io_loop.start()
+
+
+@app.command("vision")
+def vision(path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exists=True)):
+    """Bulk Labelling for Images"""
+    server = Server({"/": bulk_vision(path)}, io_loop=IOLoop())
     server.start()
     host = "http://localhost:5006/"
     print(f"About to serve `bulk` over at {host}.")
