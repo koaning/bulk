@@ -4,7 +4,7 @@ from bokeh.layouts import column, row
 from bokeh.models import Button, ColumnDataSource, TextInput, DataTable, TableColumn, ColorBar
 from bokeh.plotting import figure
 
-from ._bokeh_utils import get_color_mapping
+from bulk._bokeh_utils import get_color_mapping
 
 
 def determine_keyword(text, keywords):

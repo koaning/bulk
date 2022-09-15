@@ -3,7 +3,7 @@ from typing import List
 
 import typer
 import pandas as pd
-from bulk.download import app as download_app
+from bulk.cli.util.download import app as download_app
 
 app = typer.Typer(
     name="util",

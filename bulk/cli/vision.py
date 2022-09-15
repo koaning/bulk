@@ -7,7 +7,7 @@ from bokeh.plotting import figure
 from bokeh.layouts import column, row
 from bokeh.models import Button, ColumnDataSource, TextInput, DataTable, TableColumn, ColorBar, HTMLTemplateFormatter
 
-from ._bokeh_utils import get_color_mapping
+from bulk._bokeh_utils import get_color_mapping
 
 
 def encode_image(path):

@@ -5,24 +5,24 @@ from bokeh.server.server import Server
 from bokeh.util.browser import view
 from tornado.ioloop import IOLoop
 
-from bulk.text import bulk_text
-from bulk.vision import bulk_vision
-from bulk.util import app as util_app
+from bulk.cli.text import bulk_text
+from bulk.cli.vision import bulk_vision
+from bulk.cli.util import app as util_app
+
+import click
+
+class NaturalOrderGroup(click.Group):
+    def list_commands(self, ctx):
+        return self.commands.keys()
 
 app = typer.Typer(
     name="bulk",
     add_completion=False,
     help="Tools for bulk labelling.",
     no_args_is_help=True,
+    cls=NaturalOrderGroup
 )
 app.add_typer(util_app, name="util")
-
-
-
-@app.command("version")
-def version():
-    """Prints the version."""
-    print("0.1.0")
 
 
 @app.command("text")
