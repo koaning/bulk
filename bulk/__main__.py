@@ -1,6 +1,7 @@
 import pathlib
 
 import typer
+from typer.core import TyperGroup
 from bokeh.server.server import Server
 from bokeh.util.browser import view
 from tornado.ioloop import IOLoop
@@ -11,7 +12,7 @@ from bulk.cli.util import app as util_app
 
 import click
 
-class NaturalOrderGroup(click.Group):
+class NaturalOrderGroup(TyperGroup):
     def list_commands(self, ctx):
         return self.commands.keys()
 
