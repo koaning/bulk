@@ -40,11 +40,12 @@ def text(path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exis
 
 
 @app.command("vision")
-def vision(path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exists=True)):
+def vision(path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exists=True),
+           port: int = typer.Argument(5006, help="Port number")):
     """Bulk Labelling for Images"""
     server = Server({"/": bulk_vision(path)}, io_loop=IOLoop())
     server.start()
-    host = "http://localhost:5006/"
+    host = f"http://localhost:{port}/"
     print(f"About to serve `bulk` over at {host}.")
     server.io_loop.add_callback(view, host)
     server.io_loop.start()
