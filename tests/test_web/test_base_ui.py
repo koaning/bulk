@@ -1,5 +1,5 @@
-import time 
-import pandas as pd 
+import time
+import pandas as pd
 
 
 # def test_example_is_working(page):
