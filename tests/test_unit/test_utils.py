@@ -19,7 +19,9 @@ def _create_dummy_df() -> pd.DataFrame:
 
 def test_get_color_mapping_raises_error_on_too_many_classes():
     df = _create_dummy_df()
-    additional_class = pd.DataFrame.from_records([{"color": _int_to_alpha(MAX_DISCRETE_CLASSES + 1)}])
+    additional_class = pd.DataFrame.from_records(
+        [{"color": _int_to_alpha(MAX_DISCRETE_CLASSES + 1)}]
+    )
     df = pd.concat([df, additional_class], axis=0, ignore_index=True)
     with pytest.raises(ValueError):
         get_color_mapping(df)
