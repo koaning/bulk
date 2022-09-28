@@ -7,7 +7,7 @@ from bokeh.util.browser import view
 from tornado.ioloop import IOLoop
 
 from bulk.cli.text import bulk_text
-from bulk.cli.images import bulk_images
+from bulk.cli.image import bulk_images
 from bulk.cli.util import app as util_app
 from bulk.cli.download import app as download_app
 
@@ -48,7 +48,7 @@ def text(
 
 
 @app.command("image")
-def images(
+def image(
     path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exists=True),
     port: int = typer.Option(5006, help="Port number"),
 ):
