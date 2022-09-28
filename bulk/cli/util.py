@@ -3,7 +3,6 @@ from typing import List
 
 import typer
 import pandas as pd
-from bulk.cli.util.download import app as download_app
 
 app = typer.Typer(
     name="util",
@@ -11,7 +10,6 @@ app = typer.Typer(
     help="Extra utilities.",
     no_args_is_help=True,
 )
-app.add_typer(download_app, name="download")
 
 
 @app.command("concat")

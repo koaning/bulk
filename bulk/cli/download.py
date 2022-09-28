@@ -16,7 +16,7 @@ app = typer.Typer(
 @app.command("twemoji")
 def twemoji(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
     """
-    Download the images of the twemoji dataset.
+    Download images of twemoji.
 
     This dataset reprents a snapshot of the emoji that Twitter uses.
     It can originally be found here: https://github.com/twitter/twemoji
@@ -41,44 +41,10 @@ def twemoji(force: bool = typer.Option(False, help="Force the download", is_flag
     src.unlink()
 
 
-@app.command("flower")
-def flower(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
-    """
-    Download the images of the flower dataset.
-
-    This dataset contains photos of 17 classes of flower.
-
-    The dataset is fetched from the original Oxford repository, here:
-    https://www.robots.ox.ac.uk/~vgg/data/flowers/17/index.html
-
-    Once downloaded, you'll find these images in the `downloads` folder of the current dir.
-    """
-    src = pathlib.Path("downloads/flower/flower.tgz")
-    if not force and src.parent.exists():
-        print("The flower dataset already exists")
-        raise typer.Exit(1)
-    src.parent.mkdir(exist_ok=True, parents=True)
-    dst = pathlib.Path("downloads/flower")
-
-    # Download and untar
-    urllib.request.urlretrieve(
-        "https://www.robots.ox.ac.uk/~vgg/data/flowers/17/17flowers.tgz", str(src)
-    )
-    with tarfile.open(str(src), "r:gz") as tar:
-        tar.extractall(str(dst))
-    src.unlink()
-
-    # Move files into nice positions
-    glob = pathlib.Path("downloads/flower/jpg").glob("*.jpg")
-    for file in glob:
-        file.rename(f"downloads/flower/{file.name}")
-    shutil.rmtree("downloads/flower/jpg")
-
-
 @app.command("pets")
 def pets(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
     """
-    Download the images of the pets dataset.
+    Download images of pets.
 
     This dataset contains photos of 39 breeds of pets.
 
@@ -105,7 +71,7 @@ def pets(force: bool = typer.Option(False, help="Force the download", is_flag=Tr
 @app.command("fruits")
 def fruits(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
     """
-    Download the images of the fruits dataset.
+    Download images of fruit.
 
     The dataset contains pictures of 360 degree fruits images
 

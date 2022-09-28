@@ -37,7 +37,7 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
         raise ValueError("Expected fill, strict, or ignore")
 
 
-def bulk_vision(path):
+def bulk_images(path):
     def bkapp(doc):
         df = pd.read_csv(path).assign(
             image=lambda d: [encode_image(p) for p in d["path"]]
