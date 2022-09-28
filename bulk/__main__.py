@@ -7,8 +7,9 @@ from bokeh.util.browser import view
 from tornado.ioloop import IOLoop
 
 from bulk.cli.text import bulk_text
-from bulk.cli.vision import bulk_vision
+from bulk.cli.images import bulk_images
 from bulk.cli.util import app as util_app
+from bulk.cli.download import app as download_app
 
 
 class NaturalOrderGroup(TyperGroup):
@@ -23,6 +24,7 @@ app = typer.Typer(
     no_args_is_help=True,
     cls=NaturalOrderGroup,
 )
+app.add_typer(download_app, name="download")
 app.add_typer(util_app, name="util")
 
 
@@ -45,13 +47,13 @@ def text(
     server.io_loop.start()
 
 
-@app.command("vision")
-def vision(
+@app.command("image")
+def images(
     path: pathlib.Path = typer.Argument(..., help="Path to .csv file", exists=True),
     port: int = typer.Option(5006, help="Port number"),
 ):
     """Bulk Labelling for Images"""
-    server = Server({"/": bulk_vision(path)}, io_loop=IOLoop(), port=port)
+    server = Server({"/": bulk_images(path)}, io_loop=IOLoop(), port=port)
     server.start()
     host = f"http://localhost:{port}/"
     print(f"About to serve `bulk` over at {host}.")
