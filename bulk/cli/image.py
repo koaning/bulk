@@ -21,7 +21,7 @@ from bulk._bokeh_utils import get_color_mapping
 def encode_image(path):
     with open(path, "rb") as image_file:
         enc_str = base64.b64encode(image_file.read()).decode("utf-8")
-    return f'<img width="100%" src="data:image/png;base64,{enc_str}">'
+    return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
 
 
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
