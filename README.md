@@ -39,27 +39,23 @@ from sklearn.pipeline import make_pipeline
 from sklearn.linear_model import LogisticRegression
 
 
-# pip install -U sentence-transformers
-from embetter.grab import ColumnGrabber
+# pip install "embetter[text]"
 from embetter.text import SentenceEncoder
 
 # Load the universal sentence encoder
 text_emb_pipeline = make_pipeline(
-  ColumnGrabber("text"),
-  SentenceEncoder('all-MiniLM-L6-v2')
+  SentenceEncoder('all-MiniLM-L6-v2'),
+  UMAP()
 )
 
-# Load original dataset
-df = pd.read_csv("original.csv")
+# Load sentences
+sentences = list(pd.read_csv("original.csv")['sentences'])
 
 # Calculate embeddings 
-X =  model.encode(sentences)
+X_tfm = text_emb_pipeline.fit_transform(sentences)
 
-# Reduce the dimensions with UMAP
-umap = UMAP()
-X_tfm = umap.fit_transform(X)
-
-# Apply coordinates
+# Write to disk. Note! Text column must be named "text"
+df = pd.DataFrame({"text": sentences})
 df['x'] = X_tfm[:, 0]
 df['y'] = X_tfm[:, 1]
 df.to_csv("ready.csv")
@@ -100,9 +96,11 @@ from sklearn.pipeline import make_pipeline
 from umap import UMAP
 from sklearn.preprocessing import MinMaxScaler
 
+# pip install "embetter[vision]"
 from embetter.grab import ColumnGrabber
 from embetter.vision import ImageLoader, TimmEncoder
 
+# Build image encoding pipeline
 image_emb_pipeline = make_pipeline(
     ColumnGrabber("path"),
     ImageLoader(convert="RGB"),
@@ -118,6 +116,7 @@ dataf = pd.DataFrame({
 })
 
 # Make csv file with Umap'ed model layer 
+# Note! Bulk assumes the image path column to be called "path"!
 X = image_emb_pipeline.fit_transform(dataf)
 dataf['x'] = X[:, 0]
 dataf['y'] = X[:, 1]
