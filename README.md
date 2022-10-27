@@ -42,7 +42,7 @@ from sklearn.linear_model import LogisticRegression
 # pip install "embetter[text]"
 from embetter.text import SentenceEncoder
 
-# Load the universal sentence encoder
+# Build a sentence encoder pipeline with UMAP at the end.
 text_emb_pipeline = make_pipeline(
   SentenceEncoder('all-MiniLM-L6-v2'),
   UMAP()
@@ -71,7 +71,7 @@ If you're looking for an example file to play around with you can download
 [the demo .csv file](https://github.com/koaning/bulk/blob/main/cluestarred.csv) in this repository. This dataset 
 contains a subset of a dataset found on Kaggle. You can find the original [here](https://www.kaggle.com/datasets/thoughtvector/customer-support-on-twitter).
 
-### Extras 
+### Extra Settings
 
 You can also pass an extra column to your csv file called "color". This column will then be used to color the points in the interface. 
 
