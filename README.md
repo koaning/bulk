@@ -104,7 +104,7 @@ from embetter.vision import ImageLoader, TimmEncoder
 image_emb_pipeline = make_pipeline(
     ColumnGrabber("path"),
     ImageLoader(convert="RGB"),
-    TimmEncoder(model='xception'),
+    TimmEncoder('xception'),
     UMAP(),
     MinMaxScaler()
 )
