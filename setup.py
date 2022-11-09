@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="bulk",
-    version="0.1.2",
+    version="0.1.3",
     packages=find_packages(),
     install_requires=["typer>=0.4.1,<1.0.0", "bokeh>=2.4.3,<3.0.0", "pandas>=1.0.0,<2.0.0"],
     extras_require={
