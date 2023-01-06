@@ -17,18 +17,14 @@ from bokeh.models import (
 
 from bulk._bokeh_utils import get_color_mapping
 
-import urllib3
-
 
 def encode_image(path):
     if type(path) == str and path.startswith('http'):
-        http = urllib3.PoolManager()
-        contents = http.request('GET', path)
-        enc_str = base64.b64encode(contents.data).decode("utf-8")
+        return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="{path}">'
     else:
         with open(path, "rb") as image_file:
             enc_str = base64.b64encode(image_file.read()).decode("utf-8")
-    return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
+        return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
 
 
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
