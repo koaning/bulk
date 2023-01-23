@@ -21,7 +21,7 @@ def determine_keyword(text, keywords):
     return "none"
 
 
-def bulk_text(path, keywords=None):
+def bulk_text(path, keywords=None, save_all_columns=False):
     def bkapp(doc):
         df = pd.read_csv(path)
         df["alpha"] = 0.5
@@ -45,7 +45,12 @@ def bulk_text(path, keywords=None):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            df.iloc[highlighted_idx][["text"]].to_csv(text_filename.value, index=False)
+            if save_all_columns:
+                df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
+            else:
+                df.iloc[highlighted_idx][["text"]].to_csv(
+                    text_filename.value, index=False
+                )
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
