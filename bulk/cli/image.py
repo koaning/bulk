@@ -37,7 +37,7 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
         raise ValueError("Expected fill, strict, or ignore")
 
 
-def bulk_images(path, save_all_columns=False):
+def bulk_images(path):
     def bkapp(doc):
         df = pd.read_csv(path).assign(
             image=lambda d: [encode_image(p) for p in d["path"]]
@@ -88,12 +88,7 @@ def bulk_images(path, save_all_columns=False):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            if save_all_columns:
-                df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
-            else:
-                df.iloc[highlighted_idx][["path"]].to_csv(
-                    text_filename.value, index=False
-                )
+            df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
