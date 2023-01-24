@@ -88,7 +88,7 @@ def bulk_images(path):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            df.iloc[highlighted_idx][["path"]].to_csv(text_filename.value, index=False)
+            df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
