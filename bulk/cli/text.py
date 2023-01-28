@@ -1,17 +1,12 @@
 import numpy as np
 import pandas as pd
 from bokeh.layouts import column, row
-from bokeh.models import (
-    Button,
-    ColumnDataSource,
-    TextInput,
-    DataTable,
-    TableColumn,
-    ColorBar,
-)
+from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
+                          DataTable, TableColumn, TextInput)
 from bokeh.plotting import figure
 
-from bulk._bokeh_utils import get_color_mapping, save_file
+from bulk._bokeh_utils import (download_js_code, get_color_mapping, read_file,
+                               save_file)
 
 
 def determine_keyword(text, keywords):
@@ -21,9 +16,9 @@ def determine_keyword(text, keywords):
     return "none"
 
 
-def bulk_text(path, keywords=None):
+def bulk_text(path, keywords=None, download=True):
     def bkapp(doc):
-        df = pd.read_csv(path)
+        df = read_file(path)
         df["alpha"] = 0.5
         if keywords:
             df["color"] = [determine_keyword(str(t), keywords) for t in df["text"]]
@@ -41,12 +36,13 @@ def bulk_text(path, keywords=None):
             highlighted_idx = new
             subset = subset.iloc[np.random.permutation(len(subset))]
             source.data = subset
-        
 
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            save_file(dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value)
+            save_file(
+                dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value
+            )
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
@@ -90,9 +86,14 @@ def bulk_text(path, keywords=None):
 
         scatter.data_source.selected.on_change("indices", update)
 
-        text_filename = TextInput(value="out.csv", title="Filename:")
-        save_btn = Button(label="SAVE")
-        save_btn.on_click(save)
+        text_filename = TextInput(value="out.csv", title="Filename:", name="filename")
+        save_btn = Button(label="DOWNLOAD" if download else "SAVE")
+        if download:
+            save_btn.js_on_click(
+                CustomJS(args=dict(source=source), code=download_js_code())
+            )
+        else:
+            save_btn.on_click(save)
 
         controls = column(p, text_filename, save_btn)
         return doc.add_root(row(controls, data_table))

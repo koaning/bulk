@@ -1,12 +1,13 @@
-from pathlib import Path 
-from typing import Tuple, Optional
+from pathlib import Path
+from string import Template
+from typing import Optional, Tuple
 
-from wasabi import msg
 import bokeh.transform
 import numpy as np
 import pandas as pd
 from bokeh.palettes import Category10, Cividis256
-from bokeh.transform import linear_cmap, factor_cmap
+from bokeh.transform import factor_cmap, linear_cmap
+from wasabi import msg
 
 
 def get_color_mapping(
@@ -68,4 +69,45 @@ def read_file(path: str):
         return pd.read_json(path, orient="records", lines=True)
     if path.suffix == "csv":
         return pd.read_csv(path)
-    msg.fail(f"Bulk only supports .csv or .jsonl files, got {str(path)}.", exits=True, spaced=True)
+    msg.fail(
+        f"Bulk only supports .csv or .jsonl files, got {str(path)}.",
+        exits=True,
+        spaced=True,
+    )
+
+
+def download_js_code():
+    return """
+    function table_to_csv(source) {
+        const columns = Object.keys(source.data)
+        const nrows = source.get_length()
+        const lines = [columns.join(',')]
+
+        for (let i = 0; i < nrows; i++) {
+            let row = [];
+            for (let j = 0; j < columns.length; j++) {
+                const column = columns[j]
+                row.push(source.data[column][i].toString())
+            }
+            lines.push(row.join(','))
+        }
+        return lines.join('\\n').concat('\\n')
+    }
+    console.log(source);
+
+
+    const filename = document.getElementsByName("filename")[0].value
+    const filetext = table_to_csv(source)
+    const blob = new Blob([filetext], { type: 'text/csv;charset=utf-8;' })
+
+    if (navigator.msSaveBlob) {
+        navigator.msSaveBlob(blob, filename)
+    } else {
+        const link = document.createElement('a')
+        link.href = URL.createObjectURL(blob)
+        link.download = filename
+        link.target = '_blank'
+        link.style.visibility = 'hidden'
+        link.dispatchEvent(new MouseEvent('click'))
+    }
+    """

@@ -1,9 +1,9 @@
-import shutil
 import pathlib
+import shutil
 import tarfile
 import urllib.request
-import typer
 
+import typer
 
 app = typer.Typer(
     name="download",

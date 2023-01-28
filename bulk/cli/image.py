@@ -1,21 +1,16 @@
 import base64
-import numpy as np
-import pandas as pd
 from itertools import zip_longest
 
-from bokeh.plotting import figure
+import numpy as np
+import pandas as pd
 from bokeh.layouts import column, row
-from bokeh.models import (
-    Button,
-    ColumnDataSource,
-    TextInput,
-    DataTable,
-    TableColumn,
-    ColorBar,
-    HTMLTemplateFormatter,
-)
+from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
+                          DataTable, HTMLTemplateFormatter, TableColumn,
+                          TextInput)
+from bokeh.plotting import figure
 
-from bulk._bokeh_utils import get_color_mapping, save_file
+from bulk._bokeh_utils import (download_js_code, get_color_mapping, read_file,
+                               save_file)
 
 
 def encode_image(path):
@@ -37,9 +32,9 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
         raise ValueError("Expected fill, strict, or ignore")
 
 
-def bulk_images(path):
+def bulk_images(path, download=False):
     def bkapp(doc):
-        df = pd.read_csv(path).assign(
+        df = read_file(path).assign(
             image=lambda d: [encode_image(p) for p in d["path"]]
         )
         df["alpha"] = 0.5
@@ -88,7 +83,9 @@ def bulk_images(path):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            save_file(dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value)
+            save_file(
+                dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value
+            )
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
@@ -128,9 +125,14 @@ def bulk_images(path):
 
         scatter.data_source.selected.on_change("indices", update)
 
-        text_filename = TextInput(value="out.csv", title="Filename:")
-        save_btn = Button(label="SAVE")
-        save_btn.on_click(save)
+        text_filename = TextInput(value="out.csv", title="Filename:", name="filename")
+        save_btn = Button(label="DOWNLOAD" if download else "SAVE")
+        if download:
+            save_btn.js_on_click(
+                CustomJS(args=dict(source=source), code=download_js_code())
+            )
+        else:
+            save_btn.on_click(save)
 
         controls = column(p, text_filename, save_btn)
         return doc.add_root(row(controls, data_table))

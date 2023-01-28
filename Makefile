@@ -5,6 +5,9 @@ clean:
 	rm -rf build
 	rm -rf dist
 	rm -rf downloads
+	black bulk
+	black tests
+	isort bulk
 
 pypi: clean
 	python setup.py sdist
@@ -14,7 +17,7 @@ pypi: clean
 install:
 	python -m pip install --upgrade pip
 	python -m pip install -e ".[dev]"
-	python -m pip install twine wheel
+	python -m pip install twine wheel black isort
 
 serve:
 	python -m bulk text cluestarred.csv
