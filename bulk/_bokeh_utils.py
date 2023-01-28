@@ -1,3 +1,4 @@
+from pathlib import Path 
 from typing import Tuple, Optional
 
 import bokeh.transform
@@ -48,3 +49,11 @@ def get_color_mapping(
             f"Got {color_datatype}."
         )
     return mapper, df
+
+
+def save_file(dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str) -> None:
+    path = Path(filename)
+    if path.suffix == "jsonl":
+        dataf.iloc[highlighted_idx].to_json(path, orient="records", lines=True)
+    else:
+        dataf.iloc[highlighted_idx].to_csv(path, index=False)

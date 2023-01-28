@@ -15,7 +15,7 @@ from bokeh.models import (
     HTMLTemplateFormatter,
 )
 
-from bulk._bokeh_utils import get_color_mapping
+from bulk._bokeh_utils import get_color_mapping, save_file
 
 
 def encode_image(path):
@@ -88,7 +88,7 @@ def bulk_images(path):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
+            save_file(dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value)
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)

@@ -11,7 +11,7 @@ from bokeh.models import (
 )
 from bokeh.plotting import figure
 
-from bulk._bokeh_utils import get_color_mapping
+from bulk._bokeh_utils import get_color_mapping, save_file
 
 
 def determine_keyword(text, keywords):
@@ -41,11 +41,12 @@ def bulk_text(path, keywords=None):
             highlighted_idx = new
             subset = subset.iloc[np.random.permutation(len(subset))]
             source.data = subset
+        
 
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
+            save_file(dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value)
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
