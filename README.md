@@ -4,6 +4,8 @@
 
 Bulk is a quick developer tool to apply some bulk labels. Given a prepared dataset with 2d embeddings it can generate an interface that allows you to quickly add some bulk, albeit less precice, annotations.
 
+https://user-images.githubusercontent.com/1019791/215258797-080dec5b-daf4-4d5c-843e-31088abff557.mp4
+
 ## Features 
 
 Bulk gives you annotation interfaces based on UMAP representations of embeddings. It offers an interface for text. 
