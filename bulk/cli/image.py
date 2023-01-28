@@ -83,6 +83,8 @@ def bulk_images(path, download=False):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
+            # df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
+
             save_file(
                 dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value
             )

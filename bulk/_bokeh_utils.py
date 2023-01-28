@@ -56,7 +56,7 @@ def get_color_mapping(
 def save_file(dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str) -> None:
     path = Path(filename)
     subset = dataf.iloc[highlighted_idx]
-    if path.suffix == "jsonl":
+    if path.suffix == ".jsonl":
         subset.to_json(path, orient="records", lines=True)
     else:
         subset.to_csv(path, index=False)
@@ -65,12 +65,13 @@ def save_file(dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str) ->
 
 def read_file(path: str):
     path = Path(path)
-    if path.suffix == "jsonl":
+    if path.suffix == ".jsonl":
         return pd.read_json(path, orient="records", lines=True)
-    if path.suffix == "csv":
+    if path.suffix == ".csv":
         return pd.read_csv(path)
+    print(path.suffix)
     msg.fail(
-        f"Bulk only supports .csv or .jsonl files, got {str(path)}.",
+        f"Bulk only supports .csv or .jsonl files, got `{str(path)}`.",
         exits=True,
         spaced=True,
     )
@@ -79,7 +80,11 @@ def read_file(path: str):
 def download_js_code():
     return """
     function table_to_csv(source) {
-        const columns = Object.keys(source.data)
+        const subset_col = ["text", "path"].filter(_ => source.data[_])[0];
+        let subset = {};
+        subset[subset_col] = source.data[subset_col]
+        console.log(subset_col, subset);
+        const columns = Object.keys(subset)
         const nrows = source.get_length()
         const lines = [columns.join(',')]
 
@@ -87,14 +92,13 @@ def download_js_code():
             let row = [];
             for (let j = 0; j < columns.length; j++) {
                 const column = columns[j]
+                console.log(column, source.data);
                 row.push(source.data[column][i].toString())
             }
-            lines.push(row.join(','))
+            lines.push(row)
         }
         return lines.join('\\n').concat('\\n')
     }
-    console.log(source);
-
 
     const filename = document.getElementsByName("filename")[0].value
     const filetext = table_to_csv(source)

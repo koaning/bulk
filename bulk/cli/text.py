@@ -41,7 +41,7 @@ def bulk_text(path, keywords=None, download=True):
             """Callback used to save highlighted data points"""
             global highlighted_idx
             save_file(
-                dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value
+                dataf=df[['text']], highlighted_idx=highlighted_idx, filename=text_filename.value
             )
 
         source = ColumnDataSource(data=dict())
