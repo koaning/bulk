@@ -1,6 +1,7 @@
 from pathlib import Path 
 from typing import Tuple, Optional
 
+from wasabi import msg
 import bokeh.transform
 import numpy as np
 import pandas as pd
@@ -53,7 +54,18 @@ def get_color_mapping(
 
 def save_file(dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str) -> None:
     path = Path(filename)
+    subset = dataf.iloc[highlighted_idx]
     if path.suffix == "jsonl":
-        dataf.iloc[highlighted_idx].to_json(path, orient="records", lines=True)
+        subset.to_json(path, orient="records", lines=True)
     else:
-        dataf.iloc[highlighted_idx].to_csv(path, index=False)
+        subset.to_csv(path, index=False)
+    msg.good(f"Saved {len(subset)} exampes over at {path}.", spaced=True)
+
+
+def read_file(path: str):
+    path = Path(path)
+    if path.suffix == "jsonl":
+        return pd.read_json(path, orient="records", lines=True)
+    if path.suffix == "csv":
+        return pd.read_csv(path)
+    msg.fail(f"Bulk only supports .csv or .jsonl files, got {str(path)}.", exits=True, spaced=True)
