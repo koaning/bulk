@@ -13,6 +13,11 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 
+def _download_and_untar(url, src, dst):
+    urllib.request.urlretrieve(url, str(src))
+    with tarfile.open(str(src), "r:gz") as tar:
+        tar.extractall(str(dst))
+    src.unlink()
 
 @app.command("twemoji")
 def twemoji(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
@@ -35,10 +40,7 @@ def twemoji(force: bool = typer.Option(False, help="Force the download", is_flag
 
     # Download and untar
     url = "https://github.com/koaning/bulk-datasets/raw/main/twemoji.tar.gz"
-    urllib.request.urlretrieve(url, str(src))
-    with tarfile.open(str(src), "r:gz") as tar:
-        tar.extractall(str(dst))
-    src.unlink()
+    _download_and_untar(url=url, src=src, dst=dst)
 
 
 @app.command("pets")
@@ -61,10 +63,7 @@ def pets(force: bool = typer.Option(False, help="Force the download", is_flag=Tr
 
     # Download and untar
     url = "https://github.com/koaning/bulk-datasets/raw/main/pets.tar.gz"
-    urllib.request.urlretrieve(url, str(src))
-    with tarfile.open(str(src), "r:gz") as tar:
-        tar.extractall(str(dst))
-    src.unlink()
+    _download_and_untar(url=url, src=src, dst=dst)
 
 
 @app.command("fruits")
@@ -87,7 +86,4 @@ def fruits(force: bool = typer.Option(False, help="Force the download", is_flag=
 
     # Download and untar
     url = "https://github.com/koaning/bulk-datasets/raw/main/fruits.tar.gz"
-    urllib.request.urlretrieve(url, str(src))
-    with tarfile.open(str(src), "r:gz") as tar:
-        tar.extractall(str(dst))
-    src.unlink()
+    _download_and_untar(url=url, src=src, dst=dst)
