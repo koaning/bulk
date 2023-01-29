@@ -1,30 +1,15 @@
 import base64
-import numpy as np
-import pandas as pd
 from itertools import zip_longest
 
-from bokeh.plotting import figure
+import numpy as np
+import pandas as pd
 from bokeh.layouts import column, row
-from bokeh.models import (
-    Button,
-    ColumnDataSource,
-    TextInput,
-    DataTable,
-    TableColumn,
-    ColorBar,
-    HTMLTemplateFormatter,
-)
+from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
+                          DataTable, HTMLTemplateFormatter, TableColumn,
+                          TextInput)
+from bokeh.plotting import figure
 
-from bulk._bokeh_utils import get_color_mapping
-
-
-def encode_image(path):
-    if type(path) == str and path.startswith('http'):
-        return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="{path}">'
-    else:
-        with open(path, "rb") as image_file:
-            enc_str = base64.b64encode(image_file.read()).decode("utf-8")
-        return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
+from bulk._bokeh_utils import download_js_code, read_file, save_file
 
 
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
@@ -40,16 +25,12 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
         raise ValueError("Expected fill, strict, or ignore")
 
 
-def bulk_images(path):
+def bulk_images(path, download=False, keywords=None):
     def bkapp(doc):
-        df = pd.read_csv(path).assign(
-            image=lambda d: [encode_image(p) for p in d["path"]]
-        )
-        df["alpha"] = 0.5
+        df, colormap, orig_cols = read_file(path, keywords=keywords)
 
         highlighted_idx = []
 
-        mapper, df = get_color_mapping(df)
         columns = [
             TableColumn(
                 field="image0",
@@ -91,7 +72,12 @@ def bulk_images(path):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
+            save_file(
+                dataf=df,
+                highlighted_idx=highlighted_idx,
+                filename=text_filename.value,
+                orig_cols=orig_cols,
+            )
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
@@ -119,8 +105,8 @@ def bulk_images(path):
             "alpha": "alpha",
         }
         if "color" in df.columns:
-            circle_kwargs.update({"color": mapper})
-            color_bar = ColorBar(color_mapper=mapper["transform"], width=8)
+            circle_kwargs.update({"color": colormap})
+            color_bar = ColorBar(color_mapper=colormap["transform"], width=8)
             p.add_layout(color_bar, "right")
 
         scatter = p.circle(**circle_kwargs)
@@ -131,9 +117,19 @@ def bulk_images(path):
 
         scatter.data_source.selected.on_change("indices", update)
 
-        text_filename = TextInput(value="out.csv", title="Filename:")
-        save_btn = Button(label="SAVE")
-        save_btn.on_click(save)
+        text_filename = TextInput(
+            value="out.jsonl" if download else "out.csv",
+            title="Filename:",
+            name="filename",
+        )
+        save_btn = Button(label="DOWNLOAD" if download else "SAVE")
+        if download:
+            print(download_js_code())
+            save_btn.js_on_click(
+                CustomJS(args=dict(source=source_orig), code=download_js_code())
+            )
+        else:
+            save_btn.on_click(save)
 
         controls = column(p, text_filename, save_btn)
         return doc.add_root(row(controls, data_table))

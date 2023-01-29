@@ -1,37 +1,19 @@
 import numpy as np
 import pandas as pd
 from bokeh.layouts import column, row
-from bokeh.models import (
-    Button,
-    ColumnDataSource,
-    TextInput,
-    DataTable,
-    TableColumn,
-    ColorBar,
-)
+from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
+                          DataTable, TableColumn, TextInput)
 from bokeh.plotting import figure
 
-from bulk._bokeh_utils import get_color_mapping
+from bulk._bokeh_utils import download_js_code, read_file, save_file
 
 
-def determine_keyword(text, keywords):
-    for kw in keywords:
-        if kw in text:
-            return kw
-    return "none"
-
-
-def bulk_text(path, keywords=None):
+def bulk_text(path, keywords=None, download=True):
     def bkapp(doc):
-        df = pd.read_csv(path)
-        df["alpha"] = 0.5
-        if keywords:
-            df["color"] = [determine_keyword(str(t), keywords) for t in df["text"]]
-            df["alpha"] = [0.4 if c == "none" else 1 for c in df["color"]]
+        df, colormap, orig_cols = read_file(path, keywords=keywords)
 
         highlighted_idx = []
 
-        mapper, df = get_color_mapping(df)
         columns = [TableColumn(field="text", title="text")]
 
         def update(attr, old, new):
@@ -45,7 +27,12 @@ def bulk_text(path, keywords=None):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
+            save_file(
+                dataf=df,
+                highlighted_idx=highlighted_idx,
+                filename=text_filename.value,
+                orig_cols=orig_cols,
+            )
 
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
@@ -77,8 +64,8 @@ def bulk_text(path, keywords=None):
             "alpha": "alpha",
         }
         if "color" in df.columns:
-            circle_kwargs.update({"color": mapper})
-            color_bar = ColorBar(color_mapper=mapper["transform"], width=8)
+            circle_kwargs.update({"color": colormap})
+            color_bar = ColorBar(color_mapper=colormap["transform"], width=8)
             p.add_layout(color_bar, "right")
 
         scatter = p.circle(**circle_kwargs)
@@ -89,9 +76,18 @@ def bulk_text(path, keywords=None):
 
         scatter.data_source.selected.on_change("indices", update)
 
-        text_filename = TextInput(value="out.csv", title="Filename:")
-        save_btn = Button(label="SAVE")
-        save_btn.on_click(save)
+        text_filename = TextInput(
+            value="out.jsonl" if download else "out.csv",
+            title="Filename:",
+            name="filename",
+        )
+        save_btn = Button(label="DOWNLOAD" if download else "SAVE")
+        if download:
+            save_btn.js_on_click(
+                CustomJS(args=dict(source=source), code=download_js_code())
+            )
+        else:
+            save_btn.on_click(save)
 
         controls = column(p, text_filename, save_btn)
         return doc.add_root(row(controls, data_table))

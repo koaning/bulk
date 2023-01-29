@@ -1,10 +1,13 @@
-from typing import Tuple, Optional
+import base64
+from pathlib import Path
+from typing import List, Optional, Tuple
 
 import bokeh.transform
 import numpy as np
 import pandas as pd
 from bokeh.palettes import Category10, Cividis256
-from bokeh.transform import linear_cmap, factor_cmap
+from bokeh.transform import factor_cmap, linear_cmap
+from wasabi import msg
 
 
 def get_color_mapping(
@@ -48,3 +51,143 @@ def get_color_mapping(
             f"Got {color_datatype}."
         )
     return mapper, df
+
+
+def clean_data_for_output(dataf: pd.DataFrame, orig_cols: List[str]) -> pd.DataFrame:
+    return dataf[orig_cols]
+
+
+def save_file(
+    dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str, orig_cols: List[str]
+) -> None:
+    path = Path(filename)
+    subset = dataf.iloc[highlighted_idx].pipe(
+        clean_data_for_output, orig_cols=orig_cols
+    )
+    if path.suffix == ".jsonl":
+        subset.to_json(path, orient="records", lines=True)
+    else:
+        subset.to_csv(path, index=False)
+    msg.good(f"Saved {len(subset)} exampes over at {path}.", spaced=True)
+
+
+def determine_keyword(text:str, keywords:List[str]) -> str:
+    for kw in keywords:
+        if kw in text:
+            return kw
+    return "none"
+
+
+def encode_image(path):
+    if type(path) == str and path.startswith("http"):
+        return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="{path}">'
+    else:
+        with open(path, "rb") as image_file:
+            enc_str = base64.b64encode(image_file.read()).decode("utf-8")
+        return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
+
+
+def read_file(path: str, keywords=None):
+    path = Path(path)
+    if path.suffix == ".jsonl":
+        dataf = pd.read_json(path, orient="records", lines=True)
+    elif path.suffix == ".csv":
+        dataf = pd.read_csv(path)
+    else:
+        msg.fail(
+            f"Bulk only supports .csv or .jsonl files, got `{str(path)}`.",
+            exits=True,
+            spaced=True,
+        )
+    orig_cols = dataf.columns
+    dataf["alpha"] = 0.5
+    if keywords:
+        if "text" not in dataf.columns:
+            msg.fail(
+                "You cannot use --keywords if there is no `text` key in the data.",
+                exits=1,
+            )
+        dataf["color"] = [determine_keyword(str(t), keywords) for t in dataf["text"]]
+        dataf["alpha"] = [0.4 if c == "none" else 1 for c in dataf["color"]]
+    if "path" in dataf.columns:
+        dataf["image"] = [encode_image(p) for p in dataf["path"]]
+    colormap, df_out = get_color_mapping(dataf)
+    return df_out, colormap, orig_cols
+
+
+def js_funcs():
+    return """
+function filter_data(elem){
+    delete elem['image'];
+    delete elem['color'];
+    delete elem['alpha'];
+    delete elem['index'];
+    return elem;
+}
+
+function table_to_jsonl(source) {
+    const subset = filter_data(source.data);
+    const columns = Object.keys(subset)
+    const nrows = source.get_length()
+    let lines = ""
+    
+    for (let i = 0; i < nrows; i++) {
+        let row = {};
+        for (let j = 0; j < columns.length; j++) {
+            const column = columns[j]
+            row[column] = source.data[column][i]
+        }
+        lines = lines + JSON.stringify(row) + "\\n"
+    }
+    return lines
+}
+
+function table_to_csv(source) {
+    const subset = filter_data(source.data);
+    const columns = Object.keys(subset)
+    const nrows = source.get_length()
+    const lines = [columns.join(',')]
+
+    for (let i = 0; i < nrows; i++) {
+        let row = [];
+        for (let j = 0; j < columns.length; j++) {
+            const column = columns[j];
+            const item = source.data[column][i];
+            const value = typeof(item) == "string" ? '"' + item.toString() + '"' : item.toString()
+            row.push(value);
+        }
+        lines.push(row);
+    }
+    return lines.join('\\n').concat('\\n')
+}
+"""
+
+
+def download_js_code():
+    return (
+        js_funcs()
+        + """
+const filename = document.getElementsByName("filename")[0].value;
+let filetext, blob;
+if(filename.includes("csv")){
+    filetext = table_to_csv(source)
+    blob = new Blob([filetext], { type: 'text/csv;charset=utf-8;' })
+}
+if(filename.includes("jsonl")){
+    filetext = table_to_jsonl(source)
+    blob = new Blob([filetext], { type: 'text/csv;charset=utf-8;' })
+}
+
+
+if (navigator.msSaveBlob) {
+    navigator.msSaveBlob(blob, filename)
+} else {
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = filename
+    link.target = '_blank'
+    link.style.visibility = 'hidden'
+    link.dispatchEvent(new MouseEvent('click'))
+}
+"""
+    )

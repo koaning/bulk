@@ -1,8 +1,8 @@
 import pathlib
 from typing import List
 
-import typer
 import pandas as pd
+import typer
 
 app = typer.Typer(
     name="util",

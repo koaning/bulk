@@ -1,9 +1,10 @@
-import shutil
 import pathlib
+import shutil
 import tarfile
 import urllib.request
-import typer
 
+import typer
+from wasabi import msg
 
 app = typer.Typer(
     name="download",
@@ -11,6 +12,13 @@ app = typer.Typer(
     help="Download datasets.",
     no_args_is_help=True,
 )
+
+
+def _download_and_untar(url, src, dst):
+    urllib.request.urlretrieve(url, str(src))
+    with tarfile.open(str(src), "r:gz") as tar:
+        tar.extractall(str(dst))
+    src.unlink()
 
 
 @app.command("twemoji")
@@ -28,17 +36,13 @@ def twemoji(force: bool = typer.Option(False, help="Force the download", is_flag
     """
     src = pathlib.Path("downloads/twemoji/twemoji.tgz")
     if not force and src.parent.exists():
-        print("The twemoji dataset already exists")
-        raise typer.Exit(1)
+        msg.good("The twemoji dataset already exists", spaced=True, exits=1)
     src.parent.mkdir(exist_ok=True, parents=True)
     dst = pathlib.Path("downloads/twemoji")
 
     # Download and untar
     url = "https://github.com/koaning/bulk-datasets/raw/main/twemoji.tar.gz"
-    urllib.request.urlretrieve(url, str(src))
-    with tarfile.open(str(src), "r:gz") as tar:
-        tar.extractall(str(dst))
-    src.unlink()
+    _download_and_untar(url=url, src=src, dst=dst)
 
 
 @app.command("pets")
@@ -55,17 +59,13 @@ def pets(force: bool = typer.Option(False, help="Force the download", is_flag=Tr
     """
     src = pathlib.Path("downloads/pets/pets.tgz")
     if not force and src.parent.exists():
-        print("The pets dataset already exists")
-        raise typer.Exit(1)
+        msg.good("The pets dataset already exists", spaced=True, exits=1)
     src.parent.mkdir(exist_ok=True, parents=True)
     dst = pathlib.Path("downloads/pets")
 
     # Download and untar
     url = "https://github.com/koaning/bulk-datasets/raw/main/pets.tar.gz"
-    urllib.request.urlretrieve(url, str(src))
-    with tarfile.open(str(src), "r:gz") as tar:
-        tar.extractall(str(dst))
-    src.unlink()
+    _download_and_untar(url=url, src=src, dst=dst)
 
 
 @app.command("fruits")
@@ -82,14 +82,10 @@ def fruits(force: bool = typer.Option(False, help="Force the download", is_flag=
     """
     src = pathlib.Path("downloads/fruits/fruits.tgz")
     if not force and src.parent.exists():
-        print("The fruits dataset already exists")
-        raise typer.Exit(1)
+        msg.good("The fruits dataset already exists", spaced=True, exits=1)
     src.parent.mkdir(exist_ok=True, parents=True)
     dst = pathlib.Path("downloads/fruits")
 
     # Download and untar
     url = "https://github.com/koaning/bulk-datasets/raw/main/fruits.tar.gz"
-    urllib.request.urlretrieve(url, str(src))
-    with tarfile.open(str(src), "r:gz") as tar:
-        tar.extractall(str(dst))
-    src.unlink()
+    _download_and_untar(url=url, src=src, dst=dst)
