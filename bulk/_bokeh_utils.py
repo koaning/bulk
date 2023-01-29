@@ -1,6 +1,6 @@
 import base64
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 
 import bokeh.transform
 import numpy as np
@@ -53,9 +53,13 @@ def get_color_mapping(
     return mapper, df
 
 
-def save_file(dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str) -> None:
+def clean_data_for_output(dataf: pd.DataFrame, orig_cols: List[str]):
+    return dataf[orig_cols]
+
+
+def save_file(dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str, orig_cols: List[str]) -> None:
     path = Path(filename)
-    subset = dataf.iloc[highlighted_idx]
+    subset = dataf.iloc[highlighted_idx].pipe(clean_data_for_output, orig_cols=orig_cols)
     if path.suffix == ".jsonl":
         subset.to_json(path, orient="records", lines=True)
     else:
@@ -91,23 +95,48 @@ def read_file(path: str, keywords=None):
             exits=True,
             spaced=True,
         )
-    
+    orig_cols = dataf.columns
     dataf["alpha"] = 0.5
     if keywords:
+        if "text" not in dataf.columns:
+            msg.fail("You cannot use --keywords if there is no `text` key in the data.", exits=1)
         dataf["color"] = [determine_keyword(str(t), keywords) for t in dataf["text"]]
         dataf["alpha"] = [0.4 if c == "none" else 1 for c in dataf["color"]]
     if "path" in dataf.columns:
         dataf["image"] = [encode_image(p) for p in dataf["path"]]
-    return get_color_mapping(dataf)
+    colormap, df_out = get_color_mapping(dataf)
+    return df_out, colormap, orig_cols
 
 
 def js_funcs():
     return """
+function filter_data(elem){
+    delete elem['image'];
+    delete elem['color'];
+    delete elem['alpha'];
+    delete elem['index'];
+    return elem;
+}
+
+function table_to_jsonl(source) {
+    const subset = filter_data(source.data);
+    const columns = Object.keys(subset)
+    const nrows = source.get_length()
+    let lines = ""
+    
+    for (let i = 0; i < nrows; i++) {
+        let row = {};
+        for (let j = 0; j < columns.length; j++) {
+            const column = columns[j]
+            row[column] = source.data[column][i]
+        }
+        lines = lines + JSON.stringify(row) + "\\n"
+    }
+    return lines
+}
+
 function table_to_csv(source) {
-    const subset_col = ["text", "path"].filter(_ => source.data[_])[0];
-    let subset = {};
-    subset[subset_col] = source.data[subset_col]
-    console.log(subset_col, subset);
+    const subset = filter_data(source.data);
     const columns = Object.keys(subset)
     const nrows = source.get_length()
     const lines = [columns.join(',')]
@@ -116,7 +145,6 @@ function table_to_csv(source) {
         let row = [];
         for (let j = 0; j < columns.length; j++) {
             const column = columns[j]
-            console.log(column, source.data);
             row.push(source.data[column][i].toString())
         }
         lines.push(row)
@@ -127,9 +155,17 @@ function table_to_csv(source) {
 
 def download_js_code():
     return js_funcs() + """
-const filename = document.getElementsByName("filename")[0].value
-const filetext = table_to_csv(source)
-const blob = new Blob([filetext], { type: 'text/csv;charset=utf-8;' })
+const filename = document.getElementsByName("filename")[0].value;
+let filetext, blob;
+if(filename.includes("csv")){
+    filetext = table_to_csv(source)
+    blob = new Blob([filetext], { type: 'text/csv;charset=utf-8;' })
+}
+if(filename.includes("jsonl")){
+    filetext = table_to_jsonl(source)
+    blob = new Blob([filetext], { type: 'text/csv;charset=utf-8;' })
+}
+
 
 if (navigator.msSaveBlob) {
     navigator.msSaveBlob(blob, filename)

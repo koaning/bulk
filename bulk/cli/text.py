@@ -11,7 +11,7 @@ from bulk._bokeh_utils import (download_js_code, get_color_mapping, read_file,
 
 def bulk_text(path, keywords=None, download=True):
     def bkapp(doc):
-        colormap, df = read_file(path, keywords=keywords)
+        df, colormap, orig_cols = read_file(path, keywords=keywords)
 
         highlighted_idx = []
         
@@ -29,7 +29,7 @@ def bulk_text(path, keywords=None, download=True):
             """Callback used to save highlighted data points"""
             global highlighted_idx
             save_file(
-                dataf=df[['text']], highlighted_idx=highlighted_idx, filename=text_filename.value
+                dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value, orig_cols=orig_cols
             )
 
         source = ColumnDataSource(data=dict())
@@ -74,7 +74,7 @@ def bulk_text(path, keywords=None, download=True):
 
         scatter.data_source.selected.on_change("indices", update)
 
-        text_filename = TextInput(value="out.csv", title="Filename:", name="filename")
+        text_filename = TextInput(value="out.jsonl" if download else "out.csv", title="Filename:", name="filename")
         save_btn = Button(label="DOWNLOAD" if download else "SAVE")
         if download:
             save_btn.js_on_click(

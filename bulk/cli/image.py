@@ -25,9 +25,9 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
         raise ValueError("Expected fill, strict, or ignore")
 
 
-def bulk_images(path, download=False):
+def bulk_images(path, download=False, keywords=None):
     def bkapp(doc):
-        colormap, df = read_file(path)
+        df, colormap, orig_cols = read_file(path, keywords=keywords)
 
         highlighted_idx = []
 
@@ -72,12 +72,9 @@ def bulk_images(path, download=False):
         def save():
             """Callback used to save highlighted data points"""
             global highlighted_idx
-            # df.iloc[highlighted_idx].to_csv(text_filename.value, index=False)
-
             save_file(
-                dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value
+                dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value, orig_cols=orig_cols
             )
-
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
 
@@ -116,11 +113,12 @@ def bulk_images(path, download=False):
 
         scatter.data_source.selected.on_change("indices", update)
 
-        text_filename = TextInput(value="out.csv", title="Filename:", name="filename")
+        text_filename = TextInput(value="out.jsonl" if download else "out.csv", title="Filename:", name="filename")
         save_btn = Button(label="DOWNLOAD" if download else "SAVE")
         if download:
+            print(download_js_code())
             save_btn.js_on_click(
-                CustomJS(args=dict(source=source), code=download_js_code())
+                CustomJS(args=dict(source=source_orig), code=download_js_code())
             )
         else:
             save_btn.on_click(save)
