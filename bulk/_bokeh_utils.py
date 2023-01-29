@@ -66,15 +66,16 @@ def save_file(dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str) ->
 def read_file(path: str):
     path = Path(path)
     if path.suffix == ".jsonl":
-        return pd.read_json(path, orient="records", lines=True)
-    if path.suffix == ".csv":
-        return pd.read_csv(path)
-    print(path.suffix)
-    msg.fail(
-        f"Bulk only supports .csv or .jsonl files, got `{str(path)}`.",
-        exits=True,
-        spaced=True,
-    )
+        dataf = pd.read_json(path, orient="records", lines=True)
+    elif path.suffix == ".csv":
+        dataf = pd.read_csv(path)
+    else:
+        msg.fail(
+            f"Bulk only supports .csv or .jsonl files, got `{str(path)}`.",
+            exits=True,
+            spaced=True,
+        )
+    return dataf
 
 
 def js_funcs():

@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from bulk._bokeh_utils import get_color_mapping
+from bulk._bokeh_utils import get_color_mapping, read_file
 
 MAX_DISCRETE_CLASSES = 10
 
@@ -33,3 +33,7 @@ def test_get_color_mapping_doesnt_raise_error():
         get_color_mapping(df)
     except ValueError as e:
         assert False, f"get_color_mapping raised a ValueError: {e}"
+
+def test_exit_bad_file():
+    with pytest.raises(SystemExit):
+        read_file("foobar.yaml")

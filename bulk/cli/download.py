@@ -4,6 +4,7 @@ import tarfile
 import urllib.request
 
 import typer
+from wasabi import msg
 
 app = typer.Typer(
     name="download",
@@ -28,8 +29,7 @@ def twemoji(force: bool = typer.Option(False, help="Force the download", is_flag
     """
     src = pathlib.Path("downloads/twemoji/twemoji.tgz")
     if not force and src.parent.exists():
-        print("The twemoji dataset already exists")
-        raise typer.Exit(1)
+        msg.good("The twemoji dataset already exists", spaced=True, exits=1)
     src.parent.mkdir(exist_ok=True, parents=True)
     dst = pathlib.Path("downloads/twemoji")
 
@@ -55,8 +55,7 @@ def pets(force: bool = typer.Option(False, help="Force the download", is_flag=Tr
     """
     src = pathlib.Path("downloads/pets/pets.tgz")
     if not force and src.parent.exists():
-        print("The pets dataset already exists")
-        raise typer.Exit(1)
+        msg.good("The pets dataset already exists", spaced=True, exits=1)
     src.parent.mkdir(exist_ok=True, parents=True)
     dst = pathlib.Path("downloads/pets")
 
@@ -82,8 +81,7 @@ def fruits(force: bool = typer.Option(False, help="Force the download", is_flag=
     """
     src = pathlib.Path("downloads/fruits/fruits.tgz")
     if not force and src.parent.exists():
-        print("The fruits dataset already exists")
-        raise typer.Exit(1)
+        msg.good("The fruits dataset already exists", spaced=True, exits=1)
     src.parent.mkdir(exist_ok=True, parents=True)
     dst = pathlib.Path("downloads/fruits")
 
