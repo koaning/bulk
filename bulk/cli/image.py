@@ -13,12 +13,6 @@ from bulk._bokeh_utils import (download_js_code, get_color_mapping, read_file,
                                save_file)
 
 
-def encode_image(path):
-    with open(path, "rb") as image_file:
-        enc_str = base64.b64encode(image_file.read()).decode("utf-8")
-    return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
-
-
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
     "Collect data into non-overlapping fixed-length chunks or blocks"
     args = [iter(iterable)] * n
@@ -34,14 +28,10 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
 
 def bulk_images(path, download=False):
     def bkapp(doc):
-        df = read_file(path).assign(
-            image=lambda d: [encode_image(p) for p in d["path"]]
-        )
-        df["alpha"] = 0.5
+        colormap, df = read_file(path)
 
         highlighted_idx = []
 
-        mapper, df = get_color_mapping(df)
         columns = [
             TableColumn(
                 field="image0",
@@ -115,8 +105,8 @@ def bulk_images(path, download=False):
             "alpha": "alpha",
         }
         if "color" in df.columns:
-            circle_kwargs.update({"color": mapper})
-            color_bar = ColorBar(color_mapper=mapper["transform"], width=8)
+            circle_kwargs.update({"color": colormap})
+            color_bar = ColorBar(color_mapper=colormap["transform"], width=8)
             p.add_layout(color_bar, "right")
 
         scatter = p.circle(**circle_kwargs)

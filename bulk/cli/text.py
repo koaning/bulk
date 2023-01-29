@@ -9,24 +9,12 @@ from bulk._bokeh_utils import (download_js_code, get_color_mapping, read_file,
                                save_file)
 
 
-def determine_keyword(text, keywords):
-    for kw in keywords:
-        if kw in text:
-            return kw
-    return "none"
-
-
 def bulk_text(path, keywords=None, download=True):
     def bkapp(doc):
-        df = read_file(path)
-        df["alpha"] = 0.5
-        if keywords:
-            df["color"] = [determine_keyword(str(t), keywords) for t in df["text"]]
-            df["alpha"] = [0.4 if c == "none" else 1 for c in df["color"]]
+        colormap, df = read_file(path, keywords=keywords)
 
         highlighted_idx = []
-
-        mapper, df = get_color_mapping(df)
+        
         columns = [TableColumn(field="text", title="text")]
 
         def update(attr, old, new):
@@ -74,8 +62,8 @@ def bulk_text(path, keywords=None, download=True):
             "alpha": "alpha",
         }
         if "color" in df.columns:
-            circle_kwargs.update({"color": mapper})
-            color_bar = ColorBar(color_mapper=mapper["transform"], width=8)
+            circle_kwargs.update({"color": colormap})
+            color_bar = ColorBar(color_mapper=colormap["transform"], width=8)
             p.add_layout(color_bar, "right")
 
         scatter = p.circle(**circle_kwargs)

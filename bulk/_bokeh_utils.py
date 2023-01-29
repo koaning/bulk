@@ -1,5 +1,5 @@
+import base64
 from pathlib import Path
-from string import Template
 from typing import Optional, Tuple
 
 import bokeh.transform
@@ -63,7 +63,23 @@ def save_file(dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str) ->
     msg.good(f"Saved {len(subset)} exampes over at {path}.", spaced=True)
 
 
-def read_file(path: str):
+def determine_keyword(text, keywords):
+    for kw in keywords:
+        if kw in text:
+            return kw
+    return "none"
+
+
+def encode_image(path):
+    if type(path) == str and path.startswith('http'):
+        return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="{path}">'
+    else:
+        with open(path, "rb") as image_file:
+            enc_str = base64.b64encode(image_file.read()).decode("utf-8")
+        return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
+    
+
+def read_file(path: str, keywords=None):
     path = Path(path)
     if path.suffix == ".jsonl":
         dataf = pd.read_json(path, orient="records", lines=True)
@@ -75,7 +91,14 @@ def read_file(path: str):
             exits=True,
             spaced=True,
         )
-    return dataf
+    
+    dataf["alpha"] = 0.5
+    if keywords:
+        dataf["color"] = [determine_keyword(str(t), keywords) for t in dataf["text"]]
+        dataf["alpha"] = [0.4 if c == "none" else 1 for c in dataf["color"]]
+    if "path" in dataf.columns:
+        dataf["image"] = [encode_image(p) for p in dataf["path"]]
+    return get_color_mapping(dataf)
 
 
 def js_funcs():
