@@ -12,7 +12,6 @@ from bokeh.plotting import figure
 from bulk._bokeh_utils import (download_js_code, get_color_mapping, read_file,
                                save_file)
 
-
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
     "Collect data into non-overlapping fixed-length chunks or blocks"
     args = [iter(iterable)] * n
