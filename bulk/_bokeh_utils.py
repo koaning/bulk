@@ -1,6 +1,6 @@
 import base64
 from pathlib import Path
-from typing import Optional, Tuple, List
+from typing import List, Optional, Tuple
 
 import bokeh.transform
 import numpy as np
@@ -57,9 +57,13 @@ def clean_data_for_output(dataf: pd.DataFrame, orig_cols: List[str]):
     return dataf[orig_cols]
 
 
-def save_file(dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str, orig_cols: List[str]) -> None:
+def save_file(
+    dataf: pd.DataFrame, highlighted_idx: pd.Series, filename: str, orig_cols: List[str]
+) -> None:
     path = Path(filename)
-    subset = dataf.iloc[highlighted_idx].pipe(clean_data_for_output, orig_cols=orig_cols)
+    subset = dataf.iloc[highlighted_idx].pipe(
+        clean_data_for_output, orig_cols=orig_cols
+    )
     if path.suffix == ".jsonl":
         subset.to_json(path, orient="records", lines=True)
     else:
@@ -75,13 +79,13 @@ def determine_keyword(text, keywords):
 
 
 def encode_image(path):
-    if type(path) == str and path.startswith('http'):
+    if type(path) == str and path.startswith("http"):
         return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="{path}">'
     else:
         with open(path, "rb") as image_file:
             enc_str = base64.b64encode(image_file.read()).decode("utf-8")
         return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
-    
+
 
 def read_file(path: str, keywords=None):
     path = Path(path)
@@ -99,7 +103,10 @@ def read_file(path: str, keywords=None):
     dataf["alpha"] = 0.5
     if keywords:
         if "text" not in dataf.columns:
-            msg.fail("You cannot use --keywords if there is no `text` key in the data.", exits=1)
+            msg.fail(
+                "You cannot use --keywords if there is no `text` key in the data.",
+                exits=1,
+            )
         dataf["color"] = [determine_keyword(str(t), keywords) for t in dataf["text"]]
         dataf["alpha"] = [0.4 if c == "none" else 1 for c in dataf["color"]]
     if "path" in dataf.columns:
@@ -155,8 +162,11 @@ function table_to_csv(source) {
 }
 """
 
+
 def download_js_code():
-    return js_funcs() + """
+    return (
+        js_funcs()
+        + """
 const filename = document.getElementsByName("filename")[0].value;
 let filetext, blob;
 if(filename.includes("csv")){
@@ -180,3 +190,4 @@ if (navigator.msSaveBlob) {
     link.dispatchEvent(new MouseEvent('click'))
 }
 """
+    )

@@ -13,11 +13,13 @@ app = typer.Typer(
     no_args_is_help=True,
 )
 
+
 def _download_and_untar(url, src, dst):
     urllib.request.urlretrieve(url, str(src))
     with tarfile.open(str(src), "r:gz") as tar:
         tar.extractall(str(dst))
     src.unlink()
+
 
 @app.command("twemoji")
 def twemoji(force: bool = typer.Option(False, help="Force the download", is_flag=True)):

@@ -34,6 +34,7 @@ def test_get_color_mapping_doesnt_raise_error():
     except ValueError as e:
         assert False, f"get_color_mapping raised a ValueError: {e}"
 
+
 def test_exit_bad_file():
     with pytest.raises(SystemExit):
         read_file("foobar.yaml")

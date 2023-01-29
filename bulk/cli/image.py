@@ -9,7 +9,8 @@ from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
                           TextInput)
 from bokeh.plotting import figure
 
-from bulk._bokeh_utils import (download_js_code, read_file, save_file)
+from bulk._bokeh_utils import download_js_code, read_file, save_file
+
 
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
     "Collect data into non-overlapping fixed-length chunks or blocks"
@@ -72,8 +73,12 @@ def bulk_images(path, download=False, keywords=None):
             """Callback used to save highlighted data points"""
             global highlighted_idx
             save_file(
-                dataf=df, highlighted_idx=highlighted_idx, filename=text_filename.value, orig_cols=orig_cols
+                dataf=df,
+                highlighted_idx=highlighted_idx,
+                filename=text_filename.value,
+                orig_cols=orig_cols,
             )
+
         source = ColumnDataSource(data=dict())
         source_orig = ColumnDataSource(data=df)
 
@@ -112,7 +117,11 @@ def bulk_images(path, download=False, keywords=None):
 
         scatter.data_source.selected.on_change("indices", update)
 
-        text_filename = TextInput(value="out.jsonl" if download else "out.csv", title="Filename:", name="filename")
+        text_filename = TextInput(
+            value="out.jsonl" if download else "out.csv",
+            title="Filename:",
+            name="filename",
+        )
         save_btn = Button(label="DOWNLOAD" if download else "SAVE")
         if download:
             print(download_js_code())
