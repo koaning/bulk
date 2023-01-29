@@ -22,7 +22,11 @@ install:
 serve:
 	python -m bulk text cluestarred.csv
 
-test:
+test-js:
+	python scripts/prep-js.py
+	npx mocha js/tests.js
+
+test-py:
 	pytest
 
 check: clean test clean

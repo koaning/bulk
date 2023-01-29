@@ -77,41 +77,44 @@ def read_file(path: str):
     )
 
 
-def download_js_code():
+def js_funcs():
     return """
-    function table_to_csv(source) {
-        const subset_col = ["text", "path"].filter(_ => source.data[_])[0];
-        let subset = {};
-        subset[subset_col] = source.data[subset_col]
-        console.log(subset_col, subset);
-        const columns = Object.keys(subset)
-        const nrows = source.get_length()
-        const lines = [columns.join(',')]
+function table_to_csv(source) {
+    const subset_col = ["text", "path"].filter(_ => source.data[_])[0];
+    let subset = {};
+    subset[subset_col] = source.data[subset_col]
+    console.log(subset_col, subset);
+    const columns = Object.keys(subset)
+    const nrows = source.get_length()
+    const lines = [columns.join(',')]
 
-        for (let i = 0; i < nrows; i++) {
-            let row = [];
-            for (let j = 0; j < columns.length; j++) {
-                const column = columns[j]
-                console.log(column, source.data);
-                row.push(source.data[column][i].toString())
-            }
-            lines.push(row)
+    for (let i = 0; i < nrows; i++) {
+        let row = [];
+        for (let j = 0; j < columns.length; j++) {
+            const column = columns[j]
+            console.log(column, source.data);
+            row.push(source.data[column][i].toString())
         }
-        return lines.join('\\n').concat('\\n')
+        lines.push(row)
     }
+    return lines.join('\\n').concat('\\n')
+}
+"""
 
-    const filename = document.getElementsByName("filename")[0].value
-    const filetext = table_to_csv(source)
-    const blob = new Blob([filetext], { type: 'text/csv;charset=utf-8;' })
+def download_js_code():
+    return js_funcs() + """
+const filename = document.getElementsByName("filename")[0].value
+const filetext = table_to_csv(source)
+const blob = new Blob([filetext], { type: 'text/csv;charset=utf-8;' })
 
-    if (navigator.msSaveBlob) {
-        navigator.msSaveBlob(blob, filename)
-    } else {
-        const link = document.createElement('a')
-        link.href = URL.createObjectURL(blob)
-        link.download = filename
-        link.target = '_blank'
-        link.style.visibility = 'hidden'
-        link.dispatchEvent(new MouseEvent('click'))
-    }
-    """
+if (navigator.msSaveBlob) {
+    navigator.msSaveBlob(blob, filename)
+} else {
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = filename
+    link.target = '_blank'
+    link.style.visibility = 'hidden'
+    link.dispatchEvent(new MouseEvent('click'))
+}
+"""

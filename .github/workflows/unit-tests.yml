@@ -9,7 +9,7 @@ on:
     - main
 
 jobs:
-  build:
+  pytest:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -28,3 +28,15 @@ jobs:
     - name: Test with Pytest
       run: |
         pytest tests/test_unit
+  jstest:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Install Mocha
+      run: npm i mocha
+    - name: Run Js Tests
+      run: npx mocha js/tests.js
+    
