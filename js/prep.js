@@ -19,3 +19,30 @@ describe('filter_data', function () {
         assert.equal("foo" in out, true);
     });
 });
+
+describe('table-to-jsonl', function () {
+    it('base usage', function () {
+        var data_in = {"data": {"text": ["this is text to keep"]}, "get_length": function(){return 1}}
+        assert.equal(table_to_jsonl(data_in), '{"text":"this is text to keep"}\n');
+    });
+    it('base usage with filter', function () {
+        var data_in = {"data": {"text": ["this is text to keep"], "image": ["should be gone"]}, "get_length": function(){return 1}}
+        assert.equal(table_to_jsonl(data_in), '{"text":"this is text to keep"}\n');
+    });
+    it('base usage multiple rows', function () {
+        var data_in = {
+            "data": {
+                "text": [
+                    "this is text to keep", 
+                    "so is this"
+                ], 
+                "image": [
+                    "should be gone", 
+                    "this too"
+                ]
+            }, 
+            "get_length": function(){return 2}
+        }
+        assert.equal(table_to_jsonl(data_in), '{"text":"this is text to keep"}\n{"text":"so is this"}\n');
+    });
+});
