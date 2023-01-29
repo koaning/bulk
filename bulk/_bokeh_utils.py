@@ -144,10 +144,12 @@ function table_to_csv(source) {
     for (let i = 0; i < nrows; i++) {
         let row = [];
         for (let j = 0; j < columns.length; j++) {
-            const column = columns[j]
-            row.push(source.data[column][i].toString())
+            const column = columns[j];
+            const item = source.data[column][i];
+            const value = typeof(item) == "string" ? '"' + item.toString() + '"' : item.toString()
+            row.push(value);
         }
-        lines.push(row)
+        lines.push(row);
     }
     return lines.join('\\n').concat('\\n')
 }
