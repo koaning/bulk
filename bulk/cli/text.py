@@ -5,8 +5,7 @@ from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
                           DataTable, TableColumn, TextInput)
 from bokeh.plotting import figure
 
-from bulk._bokeh_utils import (download_js_code, get_color_mapping, read_file,
-                               save_file)
+from bulk._bokeh_utils import (download_js_code, read_file, save_file)
 
 
 def bulk_text(path, keywords=None, download=True):

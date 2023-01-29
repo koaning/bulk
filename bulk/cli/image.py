@@ -9,8 +9,7 @@ from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
                           TextInput)
 from bokeh.plotting import figure
 
-from bulk._bokeh_utils import (download_js_code, get_color_mapping, read_file,
-                               save_file)
+from bulk._bokeh_utils import (download_js_code, read_file, save_file)
 
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
     "Collect data into non-overlapping fixed-length chunks or blocks"
