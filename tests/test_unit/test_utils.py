@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from bulk._bokeh_utils import get_color_mapping, read_file
+from bulk._bokeh_utils import get_color_mapping, read_file, determine_keyword, read_file
 
 MAX_DISCRETE_CLASSES = 10
 
@@ -38,3 +38,15 @@ def test_get_color_mapping_doesnt_raise_error():
 def test_exit_bad_file():
     with pytest.raises(SystemExit):
         read_file("foobar.yaml")
+
+def test_determine_keyword():
+    assert determine_keyword("this is a sentence", ["this"]) == "this"
+    assert determine_keyword("this is a sentence", ["that"]) == "none"
+
+def test_pluck_orig_cols():
+    _, _, orig_cols = read_file("tests/data/text.csv")
+    assert set(orig_cols) == set(["text", "x", "y"])
+
+def test_throw_sys_exit_no_text_with_keywords():
+    with pytest.raises(SystemExit):
+        read_file("tests/data/vision.csv", keywords=["foobar"])

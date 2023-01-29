@@ -53,7 +53,7 @@ def get_color_mapping(
     return mapper, df
 
 
-def clean_data_for_output(dataf: pd.DataFrame, orig_cols: List[str]):
+def clean_data_for_output(dataf: pd.DataFrame, orig_cols: List[str]) -> pd.DataFrame:
     return dataf[orig_cols]
 
 
@@ -71,7 +71,7 @@ def save_file(
     msg.good(f"Saved {len(subset)} exampes over at {path}.", spaced=True)
 
 
-def determine_keyword(text, keywords):
+def determine_keyword(text:str, keywords:List[str]) -> str:
     for kw in keywords:
         if kw in text:
             return kw
