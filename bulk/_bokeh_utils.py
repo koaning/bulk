@@ -1,4 +1,5 @@
 import base64
+import io
 from pathlib import Path
 from typing import List, Optional, Tuple
 
@@ -8,6 +9,8 @@ import pandas as pd
 from bokeh.palettes import Category10, Cividis256
 from bokeh.transform import factor_cmap, linear_cmap
 from wasabi import msg
+
+from PIL import Image
 
 
 def get_color_mapping(
@@ -78,12 +81,20 @@ def determine_keyword(text:str, keywords:List[str]) -> str:
     return "none"
 
 
-def encode_image(path):
+def encode_image(path,thumbnail=False):
     if type(path) == str and path.startswith("http"):
         return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="{path}">'
     else:
-        with open(path, "rb") as image_file:
-            enc_str = base64.b64encode(image_file.read()).decode("utf-8")
+        if thumbnail:
+            with Image.open(path) as im:
+                im.thumbnail((200,200))
+                buffered = io.BytesIO()
+                im.save(buffered, format='JPEG')
+                enc_str = base64.b64encode(buffered.read()).decode("utf-8")
+        else:
+            with open(path, "rb") as image_file:
+                enc_str = base64.b64encode(image_file.read()).decode("utf-8")
+        
         return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
 
 
