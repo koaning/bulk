@@ -110,10 +110,10 @@ def bulk_images(path, download=False, keywords=None, thumbnail=False):
             p.add_layout(color_bar, "right")
 
         scatter = p.circle(**circle_kwargs)
-        p.plot_width = 500
+        p.plot_width = 300
         if "color" in df.columns:
             p.plot_width = 350
-        p.plot_height = 500
+        p.plot_height = 300
 
         scatter.data_source.selected.on_change("indices", update)
 
