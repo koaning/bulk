@@ -86,11 +86,12 @@ def encode_image(path,thumbnail=False):
         return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="{path}">'
     else:
         if thumbnail:
+            print(path)
             with Image.open(path) as im:
                 im.thumbnail((200,200))
                 buffered = io.BytesIO()
                 im.save(buffered, format='JPEG')
-                enc_str = base64.b64encode(buffered.read()).decode("utf-8")
+                enc_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
         else:
             with open(path, "rb") as image_file:
                 enc_str = base64.b64encode(image_file.read()).decode("utf-8")
@@ -98,7 +99,7 @@ def encode_image(path,thumbnail=False):
         return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
 
 
-def read_file(path: str, keywords=None):
+def read_file(path: str, keywords=None, thumbnail=False):
     path = Path(path)
     if path.suffix == ".jsonl":
         dataf = pd.read_json(path, orient="records", lines=True)
@@ -121,7 +122,7 @@ def read_file(path: str, keywords=None):
         dataf["color"] = [determine_keyword(str(t), keywords) for t in dataf["text"]]
         dataf["alpha"] = [0.4 if c == "none" else 1 for c in dataf["color"]]
     if "path" in dataf.columns:
-        dataf["image"] = [encode_image(p) for p in dataf["path"]]
+        dataf["image"] = [encode_image(p, thumbnail) for p in dataf["path"]]
     colormap, df_out = get_color_mapping(dataf)
     return df_out, colormap, orig_cols
 

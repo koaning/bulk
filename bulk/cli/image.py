@@ -25,10 +25,10 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
         raise ValueError("Expected fill, strict, or ignore")
 
 
-def bulk_images(path, download=False, keywords=None):
+def bulk_images(path, download=False, keywords=None, thumbnail=False):
     def bkapp(doc):
-        df, colormap, orig_cols = read_file(path, keywords=keywords)
-
+        df, colormap, orig_cols = read_file(path, keywords=keywords, thumbnail=thumbnail)
+        
         highlighted_idx = []
 
         columns = [
@@ -110,10 +110,10 @@ def bulk_images(path, download=False, keywords=None):
             p.add_layout(color_bar, "right")
 
         scatter = p.circle(**circle_kwargs)
-        p.plot_width = 300
+        p.plot_width = 500
         if "color" in df.columns:
             p.plot_width = 350
-        p.plot_height = 300
+        p.plot_height = 500
 
         scatter.data_source.selected.on_change("indices", update)
 
