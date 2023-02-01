@@ -86,7 +86,6 @@ def encode_image(path,thumbnail=False):
         return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="{path}">'
     else:
         if thumbnail:
-            print(path)
             with Image.open(path) as im:
                 im.thumbnail((200,200))
                 buffered = io.BytesIO()
