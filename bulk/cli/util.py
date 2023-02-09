@@ -35,7 +35,7 @@ def concat(
 def info():
     """Prints information useful for debugging."""
     versions = {}
-    pkgs = ["bokeh", "embetter"]
+    pkgs = ["bokeh", "embetter", "pandas"]
     for pkg in pkgs:
         try:
             versions[pkg] = version(pkg)
