@@ -10,7 +10,7 @@ from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
 from bokeh.plotting import figure
 
 from bulk._bokeh_utils import download_js_code, read_file, save_file
-
+from wasabi import msg
 
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
     "Collect data into non-overlapping fixed-length chunks or blocks"
@@ -28,7 +28,11 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
 def bulk_images(path, download=False, keywords=None):
     def bkapp(doc):
         df, colormap, orig_cols = read_file(path, keywords=keywords)
-
+        if "path" not in df.columns:
+            msg.fail(
+                "Received a datafile that does not have a `path` column. This is a requirement.",
+                exits=True,
+            )
         highlighted_idx = []
 
         columns = [

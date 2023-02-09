@@ -103,12 +103,14 @@ def read_file(path: str, keywords=None):
     if "x" not in dataf.columns:
         msg.fail(
             "Received a datafile that does not have a `x` column. This is a requirement.",
-            exit=True,
+            exits=True,
+            spaced=True,
         )
     if "y" not in dataf.columns:
         msg.fail(
             "Received a datafile that does not have a `y` column. This is a requirement.",
-            exit=True,
+            exits=True,
+            spaced=True,
         )
     orig_cols = dataf.columns
     dataf["alpha"] = 0.5

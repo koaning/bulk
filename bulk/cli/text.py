@@ -14,8 +14,9 @@ def bulk_text(path, keywords=None, download=True):
         if "text" not in df.columns:
             msg.fail(
                 "Received a datafile that does not have a `text` column. This is a requirement.",
-                exit=True,
+                exits=True,
             )
+        
 
         highlighted_idx = []
 

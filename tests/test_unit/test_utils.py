@@ -53,3 +53,10 @@ def test_pluck_orig_cols():
 def test_throw_sys_exit_no_text_with_keywords():
     with pytest.raises(SystemExit):
         read_file("tests/data/vision.csv", keywords=["foobar"])
+
+
+def test_throw_sys_exit_no_x_y():
+    with pytest.raises(SystemExit):
+        read_file("tests/data/no_x.csv")
+    with pytest.raises(SystemExit):
+        read_file("tests/data/no_y.csv")
