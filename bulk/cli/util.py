@@ -1,8 +1,12 @@
 import pathlib
+import platform
+from importlib.metadata import PackageNotFoundError, version
+from pathlib import Path
 from typing import List
 
 import pandas as pd
 import typer
+from wasabi import msg
 
 app = typer.Typer(
     name="util",
@@ -27,14 +31,9 @@ def concat(
     df.drop_duplicates().to_csv(out, index=False)
 
 
-
 @app.command("info")
 def info():
     """Prints information useful for debugging."""
-    from importlib.metadata import version, PackageNotFoundError
-    from wasabi import msg
-    import platform
-    from pathlib import Path
     versions = {}
     pkgs = ["bokeh", "embetter"]
     for pkg in pkgs:
@@ -51,4 +50,3 @@ def info():
     packge_info = "\n".join([f"{pkg}={version(pkg)}" for pkg in ["bokeh", "embetter"]])
     print(packge_info)
     print(" ")
-    

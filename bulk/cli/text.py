@@ -6,11 +6,16 @@ from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
 from bokeh.plotting import figure
 
 from bulk._bokeh_utils import download_js_code, read_file, save_file
-
+from wasabi import msg
 
 def bulk_text(path, keywords=None, download=True):
     def bkapp(doc):
         df, colormap, orig_cols = read_file(path, keywords=keywords)
+        if "text" not in df.columns:
+            msg.fail(
+                "Received a datafile that does not have a `text` column. This is a requirement.",
+                exit=True,
+            )
 
         highlighted_idx = []
 
