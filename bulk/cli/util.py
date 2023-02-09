@@ -25,3 +25,30 @@ def concat(
     if shuffle:
         df = df.sample(frac=1)
     df.drop_duplicates().to_csv(out, index=False)
+
+
+
+@app.command("info")
+def info():
+    """Prints information useful for debugging."""
+    from importlib.metadata import version, PackageNotFoundError
+    from wasabi import msg
+    import platform
+    from pathlib import Path
+    versions = {}
+    pkgs = ["bokeh", "embetter"]
+    for pkg in pkgs:
+        try:
+            versions[pkg] = version(pkg)
+        except PackageNotFoundError as e:
+            pass
+    msg.divider(f"Info for bulk v{version('bulk')}")
+    msg.info(f"OS & Python", spaced=True)
+    print(f"Location={str(Path(__file__).parent.parent)}")
+    print(f"Platform={platform.platform()}")
+    print(f"Python={platform.python_version()}")
+    msg.info(f"Dependencies", spaced=True)
+    packge_info = "\n".join([f"{pkg}={version(pkg)}" for pkg in ["bokeh", "embetter"]])
+    print(packge_info)
+    print(" ")
+    
