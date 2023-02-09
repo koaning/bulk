@@ -25,10 +25,10 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
         raise ValueError("Expected fill, strict, or ignore")
 
 
-def bulk_images(path, download=False, keywords=None, thumbnail=False):
+def bulk_images(path, download=False, keywords=None, thumbnail_path=None):
     def bkapp(doc):
-        df, colormap, orig_cols = read_file(path, keywords=keywords, thumbnail=thumbnail)
-        
+        df, colormap, orig_cols = read_file(path, keywords=keywords, thumbnail_path=thumbnail_path)
+
         highlighted_idx = []
 
         columns = [

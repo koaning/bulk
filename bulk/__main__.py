@@ -61,15 +61,14 @@ def image(
     path: pathlib.Path = typer.Argument(..., help="Path to .csv/.jsonl file", exists=True),
     port: int = typer.Option(5006, help="Port number"),
     download: bool = typer.Option(False, help="Save button turns into download button", is_flag=True),
-    thumbnail: bool = typer.Option(False, help="Thumbnail images during loading, to reduce browser memorey usage", is_flag=True),
+    thumbnail_path: pathlib.Path = typer.Option(..., help="Path to folder used to store thumbnails.", exists=True),
     # fmt: on
 ):
-    print(thumbnail)
     """Bulk Labelling for Images"""
     if not path.exists():
         msg.fail(f"Path {str(path)} does not exist.", exits=True, spaced=True)
     server = Server(
-        {"/": bulk_images(path, download=download,thumbnail=thumbnail)}, io_loop=IOLoop(), port=port
+        {"/": bulk_images(path, download=download, thumbnail_path=thumbnail_path)}, io_loop=IOLoop(), port=port
     )
     server.start()
     host = f"http://localhost:{port}/"

@@ -1,5 +1,4 @@
 import base64
-import io
 from pathlib import Path
 from typing import List, Optional, Tuple
 
@@ -9,8 +8,6 @@ import pandas as pd
 from bokeh.palettes import Category10, Cividis256
 from bokeh.transform import factor_cmap, linear_cmap
 from wasabi import msg
-
-from PIL import Image
 
 
 def get_color_mapping(
@@ -81,24 +78,16 @@ def determine_keyword(text:str, keywords:List[str]) -> str:
     return "none"
 
 
-def encode_image(path,thumbnail=False):
+def encode_image(path):
     if type(path) == str and path.startswith("http"):
         return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="{path}">'
     else:
-        if thumbnail:
-            with Image.open(path) as im:
-                im.thumbnail((200,200))
-                buffered = io.BytesIO()
-                im.save(buffered, format='JPEG')
-                enc_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-        else:
-            with open(path, "rb") as image_file:
-                enc_str = base64.b64encode(image_file.read()).decode("utf-8")
-        
+        with open(path, "rb") as image_file:
+            enc_str = base64.b64encode(image_file.read()).decode("utf-8")
         return f'<img style="object-fit: scale-down;" width="100%" height="100%" src="data:image/png;base64,{enc_str}">'
 
 
-def read_file(path: str, keywords=None, thumbnail=False):
+def read_file(path: str, keywords=None, do_encoding=True, thumbnail_path=None):
     path = Path(path)
     if path.suffix == ".jsonl":
         dataf = pd.read_json(path, orient="records", lines=True)
@@ -121,7 +110,19 @@ def read_file(path: str, keywords=None, thumbnail=False):
         dataf["color"] = [determine_keyword(str(t), keywords) for t in dataf["text"]]
         dataf["alpha"] = [0.4 if c == "none" else 1 for c in dataf["color"]]
     if "path" in dataf.columns:
-        dataf["image"] = [encode_image(p, thumbnail) for p in dataf["path"]]
+        if do_encoding:
+            if thumbnail_path is None:
+                dataf["image"] = [encode_image(p) for p in dataf["path"]]
+            else:
+                thumbnail_paths = []
+                for p in dataf["path"]:
+                    p = p.split('/')[-1]
+                    p = p.split('.')[0] #remove extension
+                    p = f'{thumbnail_path}/{p}_thumbnail.jpeg'
+                    thumbnail_paths.append(encode_image(p))
+                dataf["image"] = thumbnail_paths
+
+
     colormap, df_out = get_color_mapping(dataf)
     return df_out, colormap, orig_cols
 
