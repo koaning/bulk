@@ -39,14 +39,24 @@ def test_exit_bad_file():
     with pytest.raises(SystemExit):
         read_file("foobar.yaml")
 
+
 def test_determine_keyword():
     assert determine_keyword("this is a sentence", ["this"]) == "this"
     assert determine_keyword("this is a sentence", ["that"]) == "none"
+
 
 def test_pluck_orig_cols():
     _, _, orig_cols = read_file("tests/data/text.csv")
     assert set(orig_cols) == set(["text", "x", "y"])
 
+
 def test_throw_sys_exit_no_text_with_keywords():
     with pytest.raises(SystemExit):
         read_file("tests/data/vision.csv", keywords=["foobar"])
+
+
+def test_throw_sys_exit_no_x_y():
+    with pytest.raises(SystemExit):
+        read_file("tests/data/no_x.csv")
+    with pytest.raises(SystemExit):
+        read_file("tests/data/no_y.csv")

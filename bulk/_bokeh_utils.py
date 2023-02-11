@@ -71,7 +71,7 @@ def save_file(
     msg.good(f"Saved {len(subset)} exampes over at {path}.", spaced=True)
 
 
-def determine_keyword(text:str, keywords:List[str]) -> str:
+def determine_keyword(text: str, keywords: List[str]) -> str:
     for kw in keywords:
         if kw in text:
             return kw
@@ -96,6 +96,19 @@ def read_file(path: str, keywords=None, do_encoding=True, thumbnail_path=None):
     else:
         msg.fail(
             f"Bulk only supports .csv or .jsonl files, got `{str(path)}`.",
+            exits=True,
+            spaced=True,
+        )
+    
+    if "x" not in dataf.columns:
+        msg.fail(
+            "Received a datafile that does not have a `x` column. This is a requirement.",
+            exits=True,
+            spaced=True,
+        )
+    if "y" not in dataf.columns:
+        msg.fail(
+            "Received a datafile that does not have a `y` column. This is a requirement.",
             exits=True,
             spaced=True,
         )
@@ -124,6 +137,7 @@ def read_file(path: str, keywords=None, do_encoding=True, thumbnail_path=None):
 
 
     colormap, df_out = get_color_mapping(dataf)
+    
     return df_out, colormap, orig_cols
 
 
