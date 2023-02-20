@@ -11,34 +11,28 @@ from bulk.cli.download import app as download_app
 from bulk.cli.image import bulk_images
 from bulk.cli.text import bulk_text
 from bulk.cli.util import app as util_app
+from radicli import Radicli, Arg
+
+cli = Radicli(help="Bulk: Tools for bulk labelling.")
+
+# app.add_typer(download_app, name="download")
+# app.add_typer(util_app, name="util")
 
 
-class NaturalOrderGroup(TyperGroup):
-    def list_commands(self, ctx):
-        return self.commands.keys()
-
-
-app = typer.Typer(
-    name="bulk",
-    add_completion=False,
-    help="Tools for bulk labelling.",
-    no_args_is_help=True,
-    cls=NaturalOrderGroup,
+@cli.command(
+    "text",
+    path=Arg(help="path to .csv/.jsonl file"),
+    keywords=Arg("--keywords", help="comma seperated string of terms to highlight"),
+    port=Arg("--port", help="port number"),
+    download=Arg("--download", help="save button turns into download button"),
 )
-app.add_typer(download_app, name="download")
-app.add_typer(util_app, name="util")
-
-
-@app.command("text")
 def text(
-    # fmt: off
-    path: pathlib.Path = typer.Argument(..., help="Path to .csv/.jsonl file"),
-    keywords: str = typer.Option(None, help="Keywords to highlight"),
-    port: int = typer.Option(5006, help="Port number"),
-    download: bool = typer.Option(False, help="Save button turns into download button", is_flag=True),
-    # fmt: on
+    path: pathlib.Path,
+    keywords: str = None,
+    port: int = 5006,
+    download: bool = False,
 ):
-    """Bulk Labelling for Text"""
+    """Bulk labelling interface for text."""
     if not path.exists():
         msg.fail(f"Path {str(path)} does not exist.", exits=True, spaced=True)
     if keywords:
@@ -55,15 +49,18 @@ def text(
     server.io_loop.start()
 
 
-@app.command("image")
+@cli.command(
+    "image",
+    path=Arg(help="path to .csv/.jsonl file"),
+    port=Arg("--port", help="port number"),
+    download=Arg("--download", help="save button turns into download button"),
+)
 def image(
-    # fmt: off
-    path: pathlib.Path = typer.Argument(..., help="Path to .csv/.jsonl file", exists=True),
-    port: int = typer.Option(5006, help="Port number"),
-    download: bool = typer.Option(False, help="Save button turns into download button", is_flag=True),
-    # fmt: on
+    path: pathlib.Path,
+    port: int = 5006,
+    download: bool = False,
 ):
-    """Bulk Labelling for Images"""
+    """Bulk labelling interface for images."""
     if not path.exists():
         msg.fail(f"Path {str(path)} does not exist.", exits=True, spaced=True)
     server = Server(
@@ -77,4 +74,4 @@ def image(
 
 
 if __name__ == "__main__":
-    app()
+    cli.run()
