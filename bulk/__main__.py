@@ -161,16 +161,19 @@ def extract_phrases(
     file_in=Arg(help="A file with original image paths in it."),
     file_out=Arg(help="New file with replaced thumbnail image paths in it."),
     folder_out=Arg(help="Output folder for thumbnails."),
+    size=Arg("--size", help="Image size"),
 )
 def resize(
         file_in: Path,
         file_out: Path,
-        folder_out: Path
+        folder_out: Path,
+        size:str = "200x200"
 ):
-    """Resize the images into thumbnails."""
+    """Resize images into lightweight thumbnails."""
     from PIL import Image
 
     folder_out.mkdir(exist_ok=True, parents=True)
+    size = tuple(int(i) for i in size.split("x"))
     
     df, colormap, orig_cols = read_file(file_in, do_encoding = False)
     
@@ -179,7 +182,7 @@ def resize(
         with Image.open(row.path) as im:
             file_name = row.path.split('/')[-1]
             file_name = file_name.split('.')[0]
-            im.thumbnail((200,200))
+            im.thumbnail(size)
             filepath = folder_out / f'{file_name}_thumbnail.jpeg'
             im.save(filepath, format='JPEG')
             filepaths.append(str(filepath))
