@@ -99,7 +99,7 @@ def read_file(path: str, keywords=None):
             exits=True,
             spaced=True,
         )
-    
+
     if "x" not in dataf.columns:
         msg.fail(
             "Received a datafile that does not have a `x` column. This is a requirement.",
@@ -125,7 +125,7 @@ def read_file(path: str, keywords=None):
     if "path" in dataf.columns:
         dataf["image"] = [encode_image(p) for p in dataf["path"]]
     colormap, df_out = get_color_mapping(dataf)
-    
+
     return df_out, colormap, orig_cols
 
 

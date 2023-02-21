@@ -4,13 +4,21 @@ from itertools import zip_longest
 import numpy as np
 import pandas as pd
 from bokeh.layouts import column, row
-from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
-                          DataTable, HTMLTemplateFormatter, TableColumn,
-                          TextInput)
+from bokeh.models import (
+    Button,
+    ColorBar,
+    ColumnDataSource,
+    CustomJS,
+    DataTable,
+    HTMLTemplateFormatter,
+    TableColumn,
+    TextInput,
+)
 from bokeh.plotting import figure
 
 from bulk._bokeh_utils import download_js_code, read_file, save_file
 from wasabi import msg
+
 
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
     "Collect data into non-overlapping fixed-length chunks or blocks"
