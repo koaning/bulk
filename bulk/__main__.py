@@ -157,38 +157,36 @@ def extract_phrases(
             print(json.dumps(ex))
 
 
-@cli.subcommand("util", "resize",
+@cli.subcommand(
+    "util",
+    "resize",
     file_in=Arg(help="A file with original image paths in it."),
     file_out=Arg(help="New file with replaced thumbnail image paths in it."),
     folder_out=Arg(help="Output folder for thumbnails."),
     size=Arg("--size", help="Image size"),
 )
-def resize(
-        file_in: Path,
-        file_out: Path,
-        folder_out: Path,
-        size:str = "200x200"
-):
+def resize(file_in: Path, file_out: Path, folder_out: Path, size: str = "200x200"):
     """Resize images into lightweight thumbnails."""
     from PIL import Image
 
     folder_out.mkdir(exist_ok=True, parents=True)
     size = tuple(int(i) for i in size.split("x"))
-    
-    df, colormap, orig_cols = read_file(file_in)
-    
+
+    df, _, orig_cols = read_file(file_in)
+
     filepaths = []
     for row in df.itertuples():
         with Image.open(row.path) as im:
-            file_name = row.path.split('/')[-1]
-            file_name = file_name.split('.')[0]
+            file_name = row.path.split("/")[-1]
+            file_name = file_name.split(".")[0]
             im.thumbnail(size)
-            filepath = folder_out / f'{file_name}_thumbnail.jpeg'
-            im.save(filepath, format='JPEG')
+            filepath = folder_out / f"{file_name}_thumbnail.jpeg"
+            im.save(filepath, format="JPEG")
             filepaths.append(str(filepath))
-    
-    df['path'] = filepaths
-    save_file(df, df.index, file_out)
+
+    df["path"] = filepaths
+    save_file(df, df.index, file_out, orig_cols=orig_cols)
+
 
 if __name__ == "__main__":
     cli.run()
