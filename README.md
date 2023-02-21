@@ -132,6 +132,21 @@ This generates a csv file that can be loaded in bulk via;
 python -m bulk image ready.csv
 ```
 
+### Pre-Processing
+You can also generate a set of thumbnails for your images. This can be useful if you're working with a large dataset. 
+
+```
+python -m bulk util resize ready.csv temp   
+```
+
+This will create a folder called `temp` with all the resized images. You can then use this folder as the `--thumbnail-path` argument.
+
+```
+python -m bulk image ready.csv --thumbnail-path temp
+```
+
+
+
 ## Download 
 
 You can also use bulk to download some datasets to play with. For more info:
