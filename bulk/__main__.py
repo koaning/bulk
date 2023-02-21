@@ -9,11 +9,12 @@ from bokeh.server.server import Server
 from bokeh.util.browser import view
 from tornado.ioloop import IOLoop
 from wasabi import msg
+from radicli import Radicli, Arg
 
 from bulk.cli.download import download_fruits, download_pets, download_twemoji
 from bulk.cli.image import bulk_images
 from bulk.cli.text import bulk_text
-from radicli import Radicli, Arg
+from bulk._bokeh_utils import read_file, save_file
 
 cli = Radicli(help="Bulk: Tools for bulk labelling.")
 
@@ -155,6 +156,36 @@ def extract_phrases(
         for ex in stream:
             print(json.dumps(ex))
 
+
+@cli.subcommand("util", "resize",
+    file_in=Arg(help="A file with original image paths in it."),
+    file_out=Arg(help="New file with replaced thumbnail image paths in it."),
+    folder_out=Arg(help="Output folder for thumbnails."),
+)
+def resize(
+        file_in: Path,
+        file_out: Path,
+        folder_out: Path
+):
+    """Resize the images into thumbnails."""
+    from PIL import Image
+
+    folder_out.mkdir(exist_ok=True, parents=True)
+    
+    df, colormap, orig_cols = read_file(file_in, do_encoding = False)
+    
+    filepaths = []
+    for row in df.itertuples():
+        with Image.open(row.path) as im:
+            file_name = row.path.split('/')[-1]
+            file_name = file_name.split('.')[0]
+            im.thumbnail((200,200))
+            filepath = folder_out / f'{file_name}_thumbnail.jpeg'
+            im.save(filepath, format='JPEG')
+            filepaths.append(str(filepath))
+    
+    df['path'] = filepaths
+    save_file(df, df.index, file_out)
 
 if __name__ == "__main__":
     cli.run()
