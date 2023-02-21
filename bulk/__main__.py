@@ -170,7 +170,7 @@ def resize(file_in: Path, file_out: Path, folder_out: Path, size: str = "200x200
     from PIL import Image
 
     folder_out.mkdir(exist_ok=True, parents=True)
-    size = tuple(int(i) for i in size.split("x"))
+    size_tup = tuple(int(i) for i in size.split("x"))
 
     df, _, orig_cols = read_file(file_in)
 
@@ -179,8 +179,8 @@ def resize(file_in: Path, file_out: Path, folder_out: Path, size: str = "200x200
         with Image.open(row.path) as im:
             file_name = row.path.split("/")[-1]
             file_name = file_name.split(".")[0]
-            im.thumbnail(size)
-            filepath = folder_out / f"{file_name}_thumbnail.jpeg"
+            im.thumbnail(size_tup)
+            filepath = folder_out / f"{file_name}_{size}.jpeg"
             im.save(filepath, format="JPEG")
             filepaths.append(str(filepath))
 
