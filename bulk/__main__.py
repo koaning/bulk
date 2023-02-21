@@ -175,7 +175,7 @@ def resize(
     folder_out.mkdir(exist_ok=True, parents=True)
     size = tuple(int(i) for i in size.split("x"))
     
-    df, colormap, orig_cols = read_file(file_in, do_encoding = False)
+    df, colormap, orig_cols = read_file(file_in)
     
     filepaths = []
     for row in df.itertuples():
