@@ -64,7 +64,7 @@ def image(
     if not path.exists():
         msg.fail(f"Path {str(path)} does not exist.", exits=True, spaced=True)
     server = Server(
-        {"/": bulk_images(path, download=download, thumbnail_path=thumbnail_path)},
+        {"/": bulk_images(path, download=download)},
         io_loop=IOLoop(),
         port=port,
     )

@@ -26,7 +26,7 @@ def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
         raise ValueError("Expected fill, strict, or ignore")
 
 
-def bulk_images(path, download=False, keywords=None, thumbnail_path=None):
+def bulk_images(path, download=False, keywords=None):
     def bkapp(doc):
         df, colormap, orig_cols = read_file(path, keywords=keywords)
         if "path" not in df.columns:
