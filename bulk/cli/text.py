@@ -1,19 +1,12 @@
 import numpy as np
 import pandas as pd
 from bokeh.layouts import column, row
-from bokeh.models import (
-    Button,
-    ColorBar,
-    ColumnDataSource,
-    CustomJS,
-    DataTable,
-    TableColumn,
-    TextInput,
-)
+from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
+                          DataTable, TableColumn, TextInput)
 from bokeh.plotting import figure
+from wasabi import msg
 
 from bulk._bokeh_utils import download_js_code, read_file, save_file
-from wasabi import msg
 
 
 def bulk_text(path, keywords=None, download=True):

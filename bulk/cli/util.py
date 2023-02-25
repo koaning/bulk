@@ -1,16 +1,16 @@
+import glob
 import itertools as it
 import json
+import os
 import platform
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import List
-import glob
-import os
 
 import pandas as pd
 import typer
-from wasabi import msg
 from PIL import Image
+from wasabi import msg
 
 from bulk._bokeh_utils import read_file
 
@@ -24,9 +24,7 @@ app = typer.Typer(
 
 @app.command("concat")
 def concat(
-    paths: List[Path] = typer.Argument(
-        ..., help="Paths to .csv files", exists=True
-    ),
+    paths: List[Path] = typer.Argument(..., help="Paths to .csv files", exists=True),
     out: Path = typer.Option(..., help="Name of output csv."),
     shuffle: bool = typer.Option(False, help="Keywords to highlight", is_flag=True),
 ):
@@ -39,19 +37,25 @@ def concat(
 
 @app.command("resize")
 def resize(
-        path: pathlib.Path = typer.Argument(..., help="Path to .csv/.jsonl file", exists=True),
-        thumbnail_paths: pathlib.Path = typer.Argument(..., help="Path to folder to store thumbnails.", exists=False)):
+    path: pathlib.Path = typer.Argument(
+        ..., help="Path to .csv/.jsonl file", exists=True
+    ),
+    thumbnail_paths: pathlib.Path = typer.Argument(
+        ..., help="Path to folder to store thumbnails.", exists=False
+    ),
+):
     """Resize the images into thumbnails."""
 
     os.system(f"mkdir {thumbnail_paths}")
-    df, colormap, orig_cols = read_file(path, do_encoding = False)
-    
+    df, colormap, orig_cols = read_file(path, do_encoding=False)
+
     for row in df.itertuples():
         with Image.open(row.path) as im:
-            file_name = row.path.split('/')[-1]
-            file_name = file_name.split('.')[0] #remove extension
-            im.thumbnail((200,200))
-            im.save(f'{thumbnail_paths}/{file_name}_thumbnail.jpeg', format='JPEG')
+            file_name = row.path.split("/")[-1]
+            file_name = file_name.split(".")[0]  # remove extension
+            im.thumbnail((200, 200))
+            im.save(f"{thumbnail_paths}/{file_name}_thumbnail.jpeg", format="JPEG")
+
 
 @app.command("info")
 def info():
@@ -94,12 +98,13 @@ def extract_phrases(
     # fmt: on
 ):
     """Turns a `.jsonl` with text into a `.jsonl` with extracted phrases.
-    
+
     Note! spaCy needs to be installed with an available model
     """
     # fmt: off
     import spacy
     import srsly
+
     # fmt: on
 
     stream = (ex["text"] for ex in srsly.read_jsonl(file_in))

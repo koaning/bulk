@@ -1,20 +1,20 @@
-import json
 import itertools as it
-from typing import Literal, List
-from pathlib import Path
-
+import json
 import platform
 from importlib.metadata import PackageNotFoundError, version
+from pathlib import Path
+from typing import List, Literal
+
 from bokeh.server.server import Server
 from bokeh.util.browser import view
+from radicli import Arg, Radicli
 from tornado.ioloop import IOLoop
 from wasabi import msg
-from radicli import Radicli, Arg
 
+from bulk._bokeh_utils import read_file, save_file
 from bulk.cli.download import download_fruits, download_pets, download_twemoji
 from bulk.cli.image import bulk_images
 from bulk.cli.text import bulk_text
-from bulk._bokeh_utils import read_file, save_file
 
 cli = Radicli(help="Bulk: Tools for bulk labelling.")
 
@@ -64,7 +64,9 @@ def image(
     if not path.exists():
         msg.fail(f"Path {str(path)} does not exist.", exits=True, spaced=True)
     server = Server(
-        {"/": bulk_images(path, download=download, thumbnail_path=thumbnail_path)}, io_loop=IOLoop(), port=port
+        {"/": bulk_images(path, download=download, thumbnail_path=thumbnail_path)},
+        io_loop=IOLoop(),
+        port=port,
     )
     server.start()
     host = f"http://localhost:{port}/"
@@ -132,6 +134,7 @@ def extract_phrases(
     import spacy
     import srsly
     import tqdm
+
     # fmt: on
 
     def _fetch_phrases(stream, nlp, keep_det=False):
