@@ -29,4 +29,6 @@ test-js:
 test-py:
 	pytest
 
+test: test-js test-py
+
 check: clean test clean
