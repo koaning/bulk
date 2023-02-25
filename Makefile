@@ -27,7 +27,7 @@ test-js:
 	npx mocha js/tests.js
 
 test-py:
-	pytest
+	pytest -m "not ci"
 
 test: test-js test-py
 
