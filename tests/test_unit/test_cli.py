@@ -1,6 +1,5 @@
 import pytest
 import pathlib
-from typer.testing import CliRunner
 
 from bulk.__main__ import download_fruits, download_pets, download_twemoji
 
