@@ -99,7 +99,7 @@ def read_file(path: str, keywords=None, do_encoding=True, thumbnail_path=None):
             exits=True,
             spaced=True,
         )
-    
+
     if "x" not in dataf.columns:
         msg.fail(
             "Received a datafile that does not have a `x` column. This is a requirement.",
@@ -129,15 +129,14 @@ def read_file(path: str, keywords=None, do_encoding=True, thumbnail_path=None):
             else:
                 thumbnail_paths = []
                 for p in dataf["path"]:
-                    p = p.split('/')[-1]
-                    p = p.split('.')[0] #remove extension
-                    p = f'{thumbnail_path}/{p}_thumbnail.jpeg'
+                    p = p.split("/")[-1]
+                    p = p.split(".")[0]  # remove extension
+                    p = f"{thumbnail_path}/{p}_thumbnail.jpeg"
                     thumbnail_paths.append(encode_image(p))
                 dataf["image"] = thumbnail_paths
 
-
     colormap, df_out = get_color_mapping(dataf)
-    
+
     return df_out, colormap, orig_cols
 
 

@@ -4,9 +4,10 @@ from bokeh.layouts import column, row
 from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
                           DataTable, TableColumn, TextInput)
 from bokeh.plotting import figure
+from wasabi import msg
 
 from bulk._bokeh_utils import download_js_code, read_file, save_file
-from wasabi import msg
+
 
 def bulk_text(path, keywords=None, download=True):
     def bkapp(doc):
@@ -16,7 +17,6 @@ def bulk_text(path, keywords=None, download=True):
                 "Received a datafile that does not have a `text` column. This is a requirement.",
                 exits=True,
             )
-        
 
         highlighted_idx = []
 

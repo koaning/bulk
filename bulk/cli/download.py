@@ -1,17 +1,8 @@
 import pathlib
-import shutil
 import tarfile
 import urllib.request
 
-import typer
 from wasabi import msg
-
-app = typer.Typer(
-    name="download",
-    add_completion=False,
-    help="Download datasets.",
-    no_args_is_help=True,
-)
 
 
 def _download_and_untar(url, src, dst):
@@ -21,8 +12,7 @@ def _download_and_untar(url, src, dst):
     src.unlink()
 
 
-@app.command("twemoji")
-def twemoji(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
+def download_twemoji(force: bool = False):
     """
     Download images of twemoji.
 
@@ -45,8 +35,7 @@ def twemoji(force: bool = typer.Option(False, help="Force the download", is_flag
     _download_and_untar(url=url, src=src, dst=dst)
 
 
-@app.command("pets")
-def pets(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
+def download_pets(force: bool = False):
     """
     Download images of pets.
 
@@ -68,8 +57,7 @@ def pets(force: bool = typer.Option(False, help="Force the download", is_flag=Tr
     _download_and_untar(url=url, src=src, dst=dst)
 
 
-@app.command("fruits")
-def fruits(force: bool = typer.Option(False, help="Force the download", is_flag=True)):
+def download_fruits(force: bool = False):
     """
     Download images of fruit.
 
