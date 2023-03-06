@@ -123,7 +123,7 @@ dataf = pd.DataFrame({
 X = image_emb_pipeline.fit_transform(dataf)
 dataf['x'] = X[:, 0]
 dataf['y'] = X[:, 1]
-dataf.to_csv(f"pets-xception.csv", index=False)
+dataf.to_csv("ready.csv", index=False)
 ```
 
 This generates a csv file that can be loaded in bulk via; 
