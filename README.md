@@ -157,4 +157,4 @@ python -m bulk download --help
 
 ## Usecase 
 
-The interface may help you label very quickly, but the labels themselves may be faily noisy. The intended use-case for this tool is to prepare interesting subsets to be used later in [prodi.gy](https://prodi.gy). 
+The interface may help you label very quickly, but the labels themselves may be fairly noisy. The intended use-case for this tool is to prepare interesting subsets to be used later in [prodi.gy](https://prodi.gy). 
