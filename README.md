@@ -39,8 +39,6 @@ To use bulk for text, you'll first need to prepare a csv file first.
 import pandas as pd
 from umap import UMAP
 from sklearn.pipeline import make_pipeline 
-from sklearn.linear_model import LogisticRegression
-
 
 # pip install "embetter[text]"
 from embetter.text import SentenceEncoder
