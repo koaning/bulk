@@ -59,7 +59,7 @@ X_tfm = text_emb_pipeline.fit_transform(sentences)
 df = pd.DataFrame({"text": sentences})
 df['x'] = X_tfm[:, 0]
 df['y'] = X_tfm[:, 1]
-df.to_csv("ready.csv")
+df.to_csv("ready.csv", index=False)
 ```
 
 You can now use this `ready.csv` file to apply some bulk labelling. 
