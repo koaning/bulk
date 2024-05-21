@@ -17,6 +17,11 @@ from wasabi import msg
 from bulk._bokeh_utils import download_js_code, read_file, save_file
 
 
+def _env_to_bool(value: str):
+    value = value.lower().strip()
+    return value in ["1", "t", "true"]
+
+
 def bulk_text(path, keywords=None, download=True):
     def bkapp(doc):
         df, colormap, orig_cols = read_file(path, keywords=keywords)
@@ -29,6 +34,10 @@ def bulk_text(path, keywords=None, download=True):
         highlighted_idx = []
 
         columns = [TableColumn(field="text", title="text")]
+
+        # If need to display the `label` column
+        if _env_to_bool(os.environ.get("BULK_DISPLAY_LABEL", False)):
+            columns.append(TableColumn(field="label", title="label"))
 
         def update(attr, old, new):
             """Callback used for plot update when lasso selecting"""
