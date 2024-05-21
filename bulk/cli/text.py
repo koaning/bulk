@@ -18,7 +18,7 @@ from bulk._bokeh_utils import download_js_code, read_file, save_file
 
 
 def _env_to_bool(value: str):
-    value = value.lower().strip()
+    value = str(value).lower().strip()
     return value in ["1", "t", "true"]
 
 
