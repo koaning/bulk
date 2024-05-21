@@ -1,8 +1,16 @@
+import os
 import numpy as np
 import pandas as pd
 from bokeh.layouts import column, row
-from bokeh.models import (Button, ColorBar, ColumnDataSource, CustomJS,
-                          DataTable, TableColumn, TextInput)
+from bokeh.models import (
+    Button,
+    ColorBar,
+    ColumnDataSource,
+    CustomJS,
+    DataTable,
+    TableColumn,
+    TextInput,
+)
 from bokeh.plotting import figure
 from wasabi import msg
 
@@ -65,7 +73,7 @@ def bulk_text(path, keywords=None, download=True):
         circle_kwargs = {
             "x": "x",
             "y": "y",
-            "size": 1,
+            "size": int(os.environ.get("BULK_CIRCLE_SIZE", 1)),
             "source": source_orig,
             "alpha": "alpha",
         }
@@ -75,10 +83,10 @@ def bulk_text(path, keywords=None, download=True):
             p.add_layout(color_bar, "right")
 
         scatter = p.circle(**circle_kwargs)
-        p.plot_width = 300
+        p.plot_width = int(os.environ.get("BULK_PLOT_WIDTH", 300))
         if "color" in df.columns:
-            p.plot_width = 350
-        p.plot_height = 300
+            p.plot_width = p.plot_width + 50
+        p.plot_height = int(os.environ.get("BULK_PLOT_HEIGHT", 300))
 
         scatter.data_source.selected.on_change("indices", update)
 
