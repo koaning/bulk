@@ -134,13 +134,13 @@ python -m bulk image ready.csv
 You can also generate a set of thumbnails for your images. This can be useful if you're working with a large dataset. 
 
 ```
-python -m bulk util resize ready.csv temp   
+python -m bulk util resize ready.csv ready2.csv temp   
 ```
 
 This will create a folder called `temp` with all the resized images. You can then use this folder as the `--thumbnail-path` argument.
 
 ```
-python -m bulk image ready.csv --thumbnail-path temp
+python -m bulk image ready2.csv --thumbnail-path temp
 ```
 
 
