@@ -1,6 +1,6 @@
 <img src="lasso.svg" align="right" >
 
-# bulk
+### bulk
 
 Bulk is a quick developer tool to apply some bulk labels. Given a prepared dataset with 2d embeddings it can generate an interface that allows you to quickly add some bulk, albeit less precice, annotations.
 
