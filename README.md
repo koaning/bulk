@@ -71,6 +71,9 @@ widget = BaseTextExplorer(df, X=X, encoder=enc)
 widget.show()
 ```
 
+https://github.com/user-attachments/assets/dd948815-6866-4cf1-8ef0-8045093b5904
+
+
 Thanks to tools like [ipywidget](https://ipywidgets.readthedocs.io/en/stable/) and [anywidget](https://anywidget.dev/), we can really start building some tools to keep the notebook the go-to place for your data needs. Given some proper widgets, you will never be able to out-notebook a Jupyter notebook! 
 
 The primary interest of this project is to work on tools for data quality. Being able to select datapoints in bulk feels like a great place to start. Maybe you can find an interesting subset to annotate first, maybe you get suprised when you see two distinct clusters that should be one. All that good stuff can happen in the notebook!
