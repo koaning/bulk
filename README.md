@@ -49,7 +49,9 @@ widget = BaseTextExplorer(df)
 widget.show()
 ```
 
-This will allow us to quickly explore the clusters that appear in our data. You can hold the mouse cursor to go into selection mode and when you select items you will see a random subset appear on the right. You can resample from your selection by clicking the resample button
+This will allow us to quickly explore the clusters that appear in our data. You can hold the mouse cursor to go into selection mode and when you select items you will see a random subset appear on the right. You can resample from your selection by clicking the resample button.
+
+https://github.com/user-attachments/assets/6a0f2386-356b-4c50-80ef-7ab06f815d3a
 
 When you make selections you can see the widget on the right update, but you can also grab the data from a Python attribute. 
 
