@@ -6,7 +6,74 @@ Bulk is a quick developer tool to apply some bulk labels. Given a prepared datas
 
 ## Notebook Features
 
-The future of bulk is to offer widgets that can help you in the notebook. At the moment, the `BaseTextExplorer` is the main widget that is supported. 
+The future of bulk is to offer widgets that can help you in the notebook. At the moment, the `BaseTextExplorer` is the main widget that is supported. Given some preprocessed data, you can use the explorer to poke around a 2D UMAP of text embeddings. 
+
+<details>
+  <summary>Show me the preprocessing code.</summary>
+
+```python
+import pandas as pd
+from umap import UMAP
+from sklearn.pipeline import make_pipeline 
+
+# pip install "embetter[text]"
+from embetter.text import SentenceEncoder
+
+# Build a sentence encoder pipeline with UMAP at the end.
+enc = SentenceEncoder('all-MiniLM-L6-v2')
+umap = UMAP()
+
+text_emb_pipeline = make_pipeline(
+  enc, umap
+)
+
+# Load sentences
+sentences = list(pd.read_csv("tests/data/text.csv")['text'])
+
+# Calculate embeddings 
+X_tfm = text_emb_pipeline.fit_transform(sentences)
+
+# Write to disk. Note! Text column must be named "text"
+df = pd.DataFrame({"text": sentences})
+df['x'] = X_tfm[:, 0]
+df['y'] = X_tfm[:, 1]
+````
+</details>
+
+To use the widget, you just need to run this: 
+
+```python
+from bulk.widgets import BaseTextExplorer
+
+widget = BaseTextExplorer(df)
+widget.show()
+```
+
+This will allow us to quickly explore the clusters that appear in our data. You can hold the mouse cursor to go into selection mode and when you select items you will see a random subset appear on the right. You can resample from your selection by clicking the resample button
+
+When you make selections you can see the widget on the right update, but you can also grab the data from a Python attribute. 
+
+```python
+widget.selected_idx
+widget.selected_texts
+widget.selected_dataframe
+```
+
+Being able to explore these clusters is neat, but it feels like we might more easily explore everything if we have some more tools at our disposal. In particular, we want to have an encoder around so that we may use queries in our embedded space. The UI below will allow us to explore much more interactively by updating colors with a text prompt.
+
+```python
+from embetter.text import SentenceEncoder
+
+enc = SentenceEncoder('all-MiniLM-L6-v2')
+
+# Pay attention here! The rows in df needs to align with the rows in X!
+widget = BaseTextExplorer(df, X=X, encoder=enc)
+widget.show()
+```
+
+Thanks to tools like [ipywidget](https://ipywidgets.readthedocs.io/en/stable/) and [anywidget](https://anywidget.dev/), we can really start building some tools to keep the notebook the go-to place for your data needs. Given some proper widgets, you will never be able to out-notebook a Jupyter notebook! 
+
+The primary interest of this project is to work on tools for data quality. Being able to select datapoints in bulk feels like a great place to start. Maybe you can find an interesting subset to annotate first, maybe you get suprised when you see two distinct clusters that should be one. All that good stuff can happen in the notebook!
 
 ## App Features 
 
