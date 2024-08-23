@@ -4,6 +4,13 @@
 
 Bulk is a quick developer tool to apply some bulk labels. Given a prepared dataset with 2d embeddings it can generate an interface that allows you to quickly add some bulk, albeit less precice, annotations.
 
+## Install 
+
+```
+python -m pip install --upgrade pip
+python -m pip install bulk
+```
+
 ## Notebook Features
 
 The future of bulk is to offer widgets that can help you in the notebook. At the moment, the `BaseTextExplorer` is the main widget that is supported. Given some preprocessed data, you can use the explorer to poke around a 2D UMAP of text embeddings. 
@@ -82,13 +89,11 @@ The primary interest of this project is to work on tools for data quality. Being
 
 ## App Features 
 
-https://user-images.githubusercontent.com/1019791/215258797-080dec5b-daf4-4d5c-843e-31088abff557.mp4
-
-Bulk comes with a small web app that uses Bokeh to give you annotation interfaces based on UMAP representations of embeddings. It offers an interface for text. 
+Bulk also comes with a small web app that uses Bokeh to give you annotation interfaces based on UMAP representations of embeddings. It offers an interface for text. This interface was the original interface/feature of this project. 
 
 ![](images/bulk-text.png)
 
-But it also features an image interface. 
+It also features an image interface. 
 
 ![](images/bulk-image.png)
 
@@ -97,13 +102,6 @@ We will keep these interfaces around, but the future of this project will be wid
 ## Learn
 
 If you're curious to learn more, you may appreciated [this video on YouTube](https://www.youtube.com/watch?v=gDk7_f3ovIk&ab_channel=Explosion) for text and [this video on YouTube](https://youtu.be/DmH3JmX3w2I) for computer vision.
-
-## Install 
-
-```
-python -m pip install --upgrade pip
-python -m pip install bulk
-```
 
 ## Bulk Text 
 
