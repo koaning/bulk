@@ -9,7 +9,7 @@ Bulk is a quick developer tool to apply some bulk labels. Given a prepared datas
 The future of bulk is to offer widgets that can help you in the notebook. At the moment, the `BaseTextExplorer` is the main widget that is supported. Given some preprocessed data, you can use the explorer to poke around a 2D UMAP of text embeddings. 
 
 <details>
-  <summary>Show me the preprocessing code.</summary>
+  <summary><b>Show me the preprocessing code.</b></summary>
 
 ```python
 import pandas as pd
