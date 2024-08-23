@@ -4,6 +4,13 @@
 
 Bulk is a quick developer tool to apply some bulk labels. Given a prepared dataset with 2d embeddings it can generate an interface that allows you to quickly add some bulk, albeit less precice, annotations.
 
+## Install 
+
+```
+python -m pip install --upgrade pip
+python -m pip install bulk
+```
+
 ## Notebook Features
 
 The future of bulk is to offer widgets that can help you in the notebook. At the moment, the `BaseTextExplorer` is the main widget that is supported. Given some preprocessed data, you can use the explorer to poke around a 2D UMAP of text embeddings. 
@@ -49,7 +56,9 @@ widget = BaseTextExplorer(df)
 widget.show()
 ```
 
-This will allow us to quickly explore the clusters that appear in our data. You can hold the mouse cursor to go into selection mode and when you select items you will see a random subset appear on the right. You can resample from your selection by clicking the resample button
+This will allow us to quickly explore the clusters that appear in our data. You can hold the mouse cursor to go into selection mode and when you select items you will see a random subset appear on the right. You can resample from your selection by clicking the resample button.
+
+https://github.com/user-attachments/assets/6a0f2386-356b-4c50-80ef-7ab06f815d3a
 
 When you make selections you can see the widget on the right update, but you can also grab the data from a Python attribute. 
 
@@ -71,19 +80,20 @@ widget = BaseTextExplorer(df, X=X, encoder=enc)
 widget.show()
 ```
 
+https://github.com/user-attachments/assets/dd948815-6866-4cf1-8ef0-8045093b5904
+
+
 Thanks to tools like [ipywidget](https://ipywidgets.readthedocs.io/en/stable/) and [anywidget](https://anywidget.dev/), we can really start building some tools to keep the notebook the go-to place for your data needs. Given some proper widgets, you will never be able to out-notebook a Jupyter notebook! 
 
 The primary interest of this project is to work on tools for data quality. Being able to select datapoints in bulk feels like a great place to start. Maybe you can find an interesting subset to annotate first, maybe you get suprised when you see two distinct clusters that should be one. All that good stuff can happen in the notebook!
 
 ## App Features 
 
-https://user-images.githubusercontent.com/1019791/215258797-080dec5b-daf4-4d5c-843e-31088abff557.mp4
-
-Bulk comes with a small web app that uses Bokeh to give you annotation interfaces based on UMAP representations of embeddings. It offers an interface for text. 
+Bulk also comes with a small web app that uses Bokeh to give you annotation interfaces based on UMAP representations of embeddings. It offers an interface for text. This interface was the original interface/feature of this project. 
 
 ![](images/bulk-text.png)
 
-But it also features an image interface. 
+It also features an image interface. 
 
 ![](images/bulk-image.png)
 
@@ -92,13 +102,6 @@ We will keep these interfaces around, but the future of this project will be wid
 ## Learn
 
 If you're curious to learn more, you may appreciated [this video on YouTube](https://www.youtube.com/watch?v=gDk7_f3ovIk&ab_channel=Explosion) for text and [this video on YouTube](https://youtu.be/DmH3JmX3w2I) for computer vision.
-
-## Install 
-
-```
-python -m pip install --upgrade pip
-python -m pip install bulk
-```
 
 ## Bulk Text 
 
