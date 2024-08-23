@@ -6,15 +6,21 @@ Bulk is a quick developer tool to apply some bulk labels. Given a prepared datas
 
 https://user-images.githubusercontent.com/1019791/215258797-080dec5b-daf4-4d5c-843e-31088abff557.mp4
 
-## Features 
+## Notebook Features
 
-Bulk gives you annotation interfaces based on UMAP representations of embeddings. It offers an interface for text. 
+## App Features 
+
+https://user-images.githubusercontent.com/1019791/215258797-080dec5b-daf4-4d5c-843e-31088abff557.mp4
+
+Bulk comes with a small web app that uses Bokeh to give you annotation interfaces based on UMAP representations of embeddings. It offers an interface for text. 
 
 ![](images/bulk-text.png)
 
 But it also features an image interface. 
 
 ![](images/bulk-image.png)
+
+We will keep these interfaces around, but the future of this project will be widgets from a Jupyter notebook. As is however, the webapp is certainly still useful. 
 
 ## Learn
 
