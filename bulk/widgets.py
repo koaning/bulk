@@ -27,9 +27,8 @@ class BaseTextExplorer:
                 dists = cosine_similarity(X, X_tfm).reshape(1, -1)
                 self.dists = dists
                 norm_dists = 0.01 + (dists - dists.min())/(0.1 + dists.max() - dists.min())
-                print(norm_dists)
-                explorer.scatter.color(by=norm_dists[0])
-                explorer.scatter.size(by=norm_dists[0])
+                self.scatter.color(by=norm_dists[0])
+                self.scatter.size(by=norm_dists[0])
 
             self.text_input.observe(update_text)
         
