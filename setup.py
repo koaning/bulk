@@ -10,7 +10,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'bulk = bulk.__main__:app',
+            'bulk = bulk.__main__:cli.run',
         ],
     },
 )
