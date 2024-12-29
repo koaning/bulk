@@ -145,7 +145,7 @@ python -m bulk text ready.csv
 ```
 
 If you're looking for an example file to play around with you can download
-[the demo .csv file](https://github.com/koaning/bulk/blob/main/cluestarred.csv) in this repository. This dataset 
+[the demo .csv file](https://github.com/koaning/bulk/blob/main/utils/df.csv) in this repository. This dataset 
 contains a subset of a dataset found on Kaggle. You can find the original [here](https://www.kaggle.com/datasets/thoughtvector/customer-support-on-twitter).
 
 ### Extra Settings
