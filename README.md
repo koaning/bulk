@@ -1,4 +1,6 @@
-<img src="lasso.svg" align="right" >
+# Archival notice
+
+`bulk` had a good run, but the way forward is to use reactive Python with proper widgets instead. For a full demo of what I recommend now, [check this video](https://www.youtube.com/watch?v=kpaGan0OxDc&t=38s). 
 
 ### bulk
 
